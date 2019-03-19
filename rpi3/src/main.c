@@ -14,6 +14,9 @@
 #include "drivers/sdcard/SDCard.h"
 #include "hal/hal.h"
 
+
+
+
 char command_buffer[500];
 char working_directory[500];
 uint8_t directory_index = 0;
@@ -21,6 +24,9 @@ uint8_t directory_index = 0;
 void DisplayDirectory(const char*);
 int ProcessCommand(char word [], uint8_t len);
 char * GetCurrentDirectory(char subdir []);
+void GetBinary(const char * fileName);
+
+
 
 int main (void) {
 	PiConsole_Init(0, 0, 0, &printf);								// Auto resolution console, show resolution to screen
@@ -70,6 +76,8 @@ int main (void) {
 	uint8_t c;
 	uint8_t command_buffer_index = 0;
 
+	printf("%s\n", "Attempting to dump Sensors.bin");
+	GetBinary("Serial.bin");
 	while(command_buffer_index < 75){
 		c = hal_io_serial_getc( SerialA );
 		hal_io_serial_putc( SerialA, c );
@@ -130,6 +138,43 @@ char * GetCurrentDirectory(char subdir []) {
 	strcpy(str, "this is a directory");
 	return str;
 }
+
+void GetBinary(const char * fileName) {
+	char buffer[500];
+
+	HANDLE fHandle = sdCreateFile("Sensors.bin", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (fHandle != 0) {
+		uint32_t bytesRead;
+
+		if ((sdReadFile(fHandle, &buffer[0], 500, &bytesRead, 0) == true))  {
+				buffer[bytesRead-1] = '\0';  ///insert null char
+				//printf("File Contents: %s", &buffer[0]);
+				int str [2];
+				str[0] = buffer[0];
+				str[1] = buffer[1];
+				printf("%x\n", buffer[0] & 0xff);
+				printf("%x\n", buffer[1] & 0xff);
+				printf("%x\n", buffer[2] & 0xff);
+				printf("%x\n", buffer[3] & 0xff);
+				printf("%x\n", buffer[4] & 0xff);
+				printf("%x\n", buffer[5] & 0xff);
+				printf("%x\n", buffer[6] & 0xff);				
+				// for(size_t i = 0; i < bytesRead; i += 2)
+				// {
+					
+				// 	printf("%x", (unsigned char) buffer[i]);
+				// }
+				
+		}
+		else{
+			printf("Failed to read" );
+		}
+
+		// Close the file
+		sdCloseHandle(fHandle);
+	}
+}
+
 
 void DisplayDirectory(const char* dirName) {
 	HANDLE fh;
