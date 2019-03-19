@@ -15,8 +15,12 @@
 #include "hal/hal.h"
 
 char buffer[500];
+char working_directory[500];
+uint8_t directory_index = 0;
 
 void DisplayDirectory(const char*);
+int ProcessCommand(char word [], uint8_t len);
+char * GetCurrentDirectory(char subdir []);
 
 int main (void) {
 	PiConsole_Init(0, 0, 0, &printf);								// Auto resolution console, show resolution to screen
@@ -28,7 +32,7 @@ int main (void) {
 	/* Display the SD CARD directory */
 	sdInitCard (&printf, &printf, true);
 	printf("\n");
-
+	DisplayDirectory("\\*.*");
 	/* Display root directory */
 	/*printf("Directory (/): \n");
 	DisplayDirectory("\\*.*");
@@ -64,15 +68,30 @@ int main (void) {
 	hal_io_serial_puts( SerialA, "Typewriter:" );
 
 	uint8_t c;
+	uint8_t serial_index = 0;
 
-	while(1){
+	while(serial_index < 75){
 		c = hal_io_serial_getc( SerialA );
 		hal_io_serial_putc( SerialA, c );
-		printf( "%c", c );
+		if(c == '\n' || c == '\r') {
+			if (serial_index > 0) {
+				char word[serial_index];
+				for(size_t i = 0; i < serial_index; i++)
+				{
+					word[i] = buffer[i];
+				}
+				printf("\n\r");
+				int code = ProcessCommand(word, serial_index);
+				// if (number == 0) {
+				// 	printf("LS command receieved\r\n");
+				// }
+				serial_index = 0;
+			}
+		} else {
+			printf( "%c", c );
+			buffer[serial_index++] = c;
+		}
 	}
-
-
-
 	/* display bitmap on screen */
 	//DisplayBitmap(743, 624, "./MINIOS.BMP");   //<<<<-- Doesn't seem to work
 
@@ -83,6 +102,29 @@ int main (void) {
 		timer_wait(500000);				// 0.5 sec delay
     }
 	return(0);
+}
+
+
+
+int ProcessCommand(char word [], uint8_t len) {
+	uint8_t i = 0;
+	char *command = strtok(word, " ");
+	if (strcmp(command, "ls") == 0 || strcmp(command, "LS") == 0) {
+		char * argument = strtok(NULL, " ");
+		char * str = GetCurrentDirectory(argument);
+		printf(str);
+		//DisplayDirectory(GetCurrentDirectory(argument));
+	} else {
+		printf("%s\n", "Command not recognized");
+	}
+	return 0;
+}
+
+char * GetCurrentDirectory(char subdir []) {
+	
+	char * str = (char *) malloc(45);
+	strcpy(str, "this is a directory");
+	return str;
 }
 
 void DisplayDirectory(const char* dirName) {
@@ -106,4 +148,10 @@ void DisplayDirectory(const char* dirName) {
 			find.cFileName);										// Display each entry
 	} while (sdFindNextFile(fh, &find) != 0);						// Loop finding next file
 	sdFindClose(fh);												// Close the serach handle
+}
+
+//TODO Loader
+
+int loader() {
+
 }
