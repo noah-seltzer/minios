@@ -4,7 +4,7 @@
 *				Kernel's Entry Point
 *
 */
-
+#include <stdlib.h>
 #include <stdbool.h>			// Neede for bool
 #include <stdint.h>				// Needed for uint32_t, uint16_t etc
 #include <string.h>				// Needed for memcpy

@@ -31,7 +31,7 @@
 #include <stdarg.h>								// Needed for variadic arguments
 #include <string.h>								// Needed for strlen
 #include "Font8x16.h"							// Provides the 8x16 bitmap font for console
-#include "rpi-SmartStart.h"						// This units header
+#include "rpi-smartstart.h"						// This units header
 #include "../hal/hal.h"
 
 /***************************************************************************}
