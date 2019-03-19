@@ -14,7 +14,7 @@
 #include "drivers/sdcard/SDCard.h"
 #include "hal/hal.h"
 
-char buffer[500];
+char command_buffer[500];
 char working_directory[500];
 uint8_t directory_index = 0;
 
@@ -46,9 +46,9 @@ int main (void) {
 	if (fHandle != 0) {
 		uint32_t bytesRead;
 
-		if ((sdReadFile(fHandle, &buffer[0], 500, &bytesRead, 0) == true))  {
-				buffer[bytesRead-1] = '\0';  ///insert null char
-				printf("File Contents: %s", &buffer[0]);
+		if ((sdReadFile(fHandle, &bcommand_uffer[0], 500, &bytesRead, 0) == true))  {
+				bcommand_uffer[bytesRead-1] = '\0';  ///insert null char
+				printf("File Contents: %s", &bcommand_uffer[0]);
 		}
 		else{
 			printf("Failed to read" );
@@ -68,28 +68,31 @@ int main (void) {
 	hal_io_serial_puts( SerialA, "Typewriter:" );
 
 	uint8_t c;
-	uint8_t serial_index = 0;
+	uint8_t command_buffer_index = 0;
 
-	while(serial_index < 75){
+	while(command_buffer_index < 75){
 		c = hal_io_serial_getc( SerialA );
 		hal_io_serial_putc( SerialA, c );
+
+		//if the enter key is encountered
 		if(c == '\n' || c == '\r') {
-			if (serial_index > 0) {
-				char word[serial_index];
-				for(size_t i = 0; i < serial_index; i++)
+			if (command_buffer_index > 0) {
+
+				char word[command_buffer_index];
+				for(size_t i = 0; i < command_buffer_index; i++)
 				{
-					word[i] = buffer[i];
+					word[i] = command_buffer[i];
 				}
+
 				printf("\n\r");
-				int code = ProcessCommand(word, serial_index);
-				// if (number == 0) {
-				// 	printf("LS command receieved\r\n");
-				// }
-				serial_index = 0;
+
+				int result = ProcessCommand(word, command_buffer_index);
+
+				command_buffer_index = 0;
 			}
 		} else {
 			printf( "%c", c );
-			buffer[serial_index++] = c;
+			command_buffer[command_buffer_index++] = c;
 		}
 	}
 	/* display bitmap on screen */
@@ -114,6 +117,7 @@ int ProcessCommand(char word [], uint8_t len) {
 		char * str = GetCurrentDirectory(argument);
 		printf(str);
 		//DisplayDirectory(GetCurrentDirectory(argument));
+		//TODO make this process ls arguments (IE ls /home)
 	} else {
 		printf("%s\n", "Command not recognized");
 	}
