@@ -128,7 +128,9 @@ int ProcessCommand(char word [], uint8_t len) {
 	if (command[0] == '$') {
 		char * bin = strtok(command, "$");
 			executeSimpleApp(bin);
-		
+	} else if (strcmp(command, "sysinfo") == 0) {
+			
+	
 	} else if (strcmp(command, "ls") == 0 || strcmp(command, "LS") == 0) {
 		char * argument = strtok(NULL, " ");
 		char * str = GetCurrentDirectory(argument);
