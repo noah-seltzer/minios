@@ -129,8 +129,7 @@ int ProcessCommand(char word [], uint8_t len) {
 		char * bin = strtok(command, "$");
 			executeSimpleApp(bin);
 	} else if (strcmp(command, "sysinfo") == 0) {
-			
-	
+		printf("\nSystem information\n OS Name: TestOS\n OS Version: 2.0\n OS Manufacturer: Sad BCIT Students");
 	} else if (strcmp(command, "ls") == 0 || strcmp(command, "LS") == 0) {
 		char * argument = strtok(NULL, " ");
 		char * str = GetCurrentDirectory(argument);
