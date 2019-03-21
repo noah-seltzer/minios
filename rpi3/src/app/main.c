@@ -13,11 +13,20 @@
 // #include "boot/rpi-smartstart.h"		// Needed for smart start API
 // #include "drivers/sdcard/SDCard.h"
 // #include "hal/hal.h"
-
 #define MINIOS_APP __attribute__((section(".app_entry")))
 
-MINIOS_APP int main (void) {
+typedef int (*printhandler) (const char *fmt, ...);
 
-	return(9);
+
+
+
+
+MINIOS_APP int main (printhandler print_handler) {
+	char arr[] = "Please clap\n";
+	int i = 0;
+	while(arr[i] != '\0') {
+		print_handler("%c", arr[i++]);
+	}
+	return(3);
 }
 

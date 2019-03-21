@@ -11,6 +11,25 @@
 .equ INIT_FAILED, 1
 .equ INIT_SUCCESS, 0
 
+
+/*
+* Gets a spot in memory (exploratory phase)
+* uint32_t _dump(uint32_t address)
+*/
+.globl _dump
+_dump:
+    address .req r0
+    content_register .req r4
+
+    push {r4-r6, lr}
+
+    ldr address, content_register
+
+
+    .unreq address
+    .unreq content_register
+    pop {r4-r6, pc}
+
 /*
 *   HAL IO Video Init
 *

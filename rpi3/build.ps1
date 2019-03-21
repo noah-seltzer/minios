@@ -4,6 +4,8 @@
 #       .\build.ps1 target=rp3 exec=true
 #       .\build.ps1 target=rp2 exec=false
 #       .\build.ps1 target=rp1 exec=true
+#--------------------------------------------------
+#       .\build.ps1 target=new_app exec=false
 #
 #     Rafael
 #
@@ -29,6 +31,10 @@ elseif ( $target -eq "target=rp3" )
 {
   Write-Host "     B U I L I D I N G    P I   3           "
   ./Pi3-64.bat
+} elseif ($target -eq "target=new_app" ) 
+{
+  Write-Host "     B U I L I D I N G    C U S T O M     A P P "
+  ./build-app.bat
 }
 else{
   Write-Host "Unknown platform"

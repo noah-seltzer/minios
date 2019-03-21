@@ -25,6 +25,7 @@ void DisplayDirectory(const char*);
 int ProcessCommand(char word [], uint8_t len);
 char * GetCurrentDirectory(char subdir []);
 void GetBinary(const char * fileName);
+void executeSimpleApp(const char * fileName);
 
 
 
@@ -72,16 +73,17 @@ int main (void) {
 	//Typewriter
 	hal_io_serial_init();
 	hal_io_serial_puts( SerialA, "Typewriter:" );
-
+	printf("#");
 	uint8_t c;
 	uint8_t command_buffer_index = 0;
 
-	printf("%s\n", "Attempting to dump Sensors.bin");
-	GetBinary("Serial.bin");
+	//printf("%s\n", "Attempting to dump Sensors.bin");
+	//GetBinary("app.bin");
+	//executeSimpleApp("app.bin");
 	while(command_buffer_index < 75){
 		c = hal_io_serial_getc( SerialA );
 		hal_io_serial_putc( SerialA, c );
-
+		
 		//if the enter key is encountered
 		if(c == '\n' || c == '\r') {
 			if (command_buffer_index > 0) {
@@ -91,12 +93,14 @@ int main (void) {
 				{
 					word[i] = command_buffer[i];
 				}
+				word[command_buffer_index] = '\0';
 
-				printf("\n\r");
-
+				
 				int result = ProcessCommand(word, command_buffer_index);
 
 				command_buffer_index = 0;
+				printf("\r\n#");
+
 			}
 		} else {
 			printf( "%c", c );
@@ -120,14 +124,27 @@ int main (void) {
 int ProcessCommand(char word [], uint8_t len) {
 	uint8_t i = 0;
 	char *command = strtok(word, " ");
-	if (strcmp(command, "ls") == 0 || strcmp(command, "LS") == 0) {
+	//printf("Full command is %s\n", command);
+	if (command[0] == '$') {
+		char * bin = strtok(command, "$");
+			executeSimpleApp(bin);
+		
+	} else if (strcmp(command, "ls") == 0 || strcmp(command, "LS") == 0) {
 		char * argument = strtok(NULL, " ");
 		char * str = GetCurrentDirectory(argument);
 		printf(str);
 		//DisplayDirectory(GetCurrentDirectory(argument));
 		//TODO make this process ls arguments (IE ls /home)
+	
+	} else if (strcmp(command, "dump") == 0) {
+		char * argument = strtok(NULL, " ");
+		if (argument == NULL) {
+			printf ("Please enter the name of a binary file");
+		} else {
+			GetBinary(argument);
+		}
 	} else {
-		printf("%s\n", "Command not recognized");
+		printf("\n%s", "Command not recognized");
 	}
 	return 0;
 }
@@ -139,29 +156,105 @@ char * GetCurrentDirectory(char subdir []) {
 	return str;
 }
 
-void GetBinary(const char * fileName) {
-	char buffer[500];
 
-	HANDLE fHandle = sdCreateFile("Sensors.bin", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+typedef int (*printhandler) (const char *fmt, ...);
+
+void executeSimpleApp(const char * fileName) {
+	
+	HANDLE fHandle = sdCreateFile(fileName, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	printf("Executing %s\n", fileName);
 	if (fHandle != 0) {
 		uint32_t bytesRead;
+		uint32_t useless;
+		int fileSize = sdGetFileSize(fHandle, &useless);
+		char buffer[fileSize];
+		//printf("File is %d bytes long\n", fileSize);
+		
+		if ((sdReadFile(fHandle, &buffer[0], fileSize, &bytesRead, 0) == true))  {
+				if(strcmp(fileName, "echo.bin") == 0) {
+					int (*other_execution) (printhandler) = &buffer;
+					int pls = other_execution(&printf);
+					printf("process executed with status code %d", pls);
+				} else { 
+				
+				int (*execution) (void) = &buffer;
 
-		if ((sdReadFile(fHandle, &buffer[0], 500, &bytesRead, 0) == true))  {
-				buffer[bytesRead-1] = '\0';  ///insert null char
-				//printf("File Contents: %s", &buffer[0]);
-				int str [2];
-				str[0] = buffer[0];
-				str[1] = buffer[1];
-				printf("%x\n", buffer[0] & 0xff);
-				printf("%x\n", buffer[1] & 0xff);
-				printf("%x\n", buffer[2] & 0xff);
-				printf("%x\n", buffer[3] & 0xff);
-				printf("%x\n", buffer[4] & 0xff);
-				printf("%x\n", buffer[5] & 0xff);
-				printf("%x\n", buffer[6] & 0xff);				
+				int pls = execution();
+				printf("process executed with status code %d", pls);
+				}
+				// uint32_t useless;
+				// int fileSize = sdGetFileSize(fHandle, &useless);
+				// printf("size of file: %d", fileSize);
 				// for(size_t i = 0; i < bytesRead; i += 2)
 				// {
-					
+
+				// 	printf("%x", (unsigned char) buffer[i]);
+				// }
+				
+		}
+		else{
+			printf("Failed to read" );
+		}
+
+		// Close the file
+		sdCloseHandle(fHandle);
+	}
+}
+
+
+void GetBinary(const char * fileName) {
+	
+	HANDLE fHandle = sdCreateFile(fileName, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	printf("Getting binary for %s\n", fileName);
+	if (fHandle != 0) {
+		uint32_t bytesRead;
+		uint32_t useless;
+		int fileSize = sdGetFileSize(fHandle, &useless);
+		char buffer[fileSize];
+		//printf("File is %d bytes long\n", fileSize);
+		
+		if ((sdReadFile(fHandle, &buffer[0], fileSize, &bytesRead, 0) == true))  {
+			uint32_t row = 0;
+			uint32_t col = 0;
+			//printf("          1    2    3    4    5    6    7    8\n");
+			for(size_t i = 0; i < bytesRead; i++)
+			{
+				if (col == 0) {
+					printf("%07x0  ", row++);
+				}
+				
+				printf("%02x ", buffer[i] & 0xff);
+				if(++col >= 16) {
+					printf("\n");
+					col = 0;
+				}
+				
+				
+				
+			}
+			
+			
+				//buffer[bytesRead-1] = '\0';  ///insert null char
+				//printf("File Contents: %s", &buffer[0]);
+				// printf("%x\n", buffer[0] & 0xff);
+				// printf("%x\n", buffer[1] & 0xff);
+				// printf("%x\n", buffer[2] & 0xff);
+				// printf("%x\n", buffer[3] & 0xff);
+				// printf("%x\n", buffer[4] & 0xff);
+				// printf("%x\n", buffer[5] & 0xff);
+				// printf("%x\n", buffer[6] & 0xff);
+
+				// int (*execution) (void) = &buffer;
+
+				// int pls = execution();
+				// printf("process executed with status code %d \n", pls);
+				
+				// uint32_t useless;
+				// int fileSize = sdGetFileSize(fHandle, &useless);
+				// printf("size of file: %d", fileSize);
+				// for(size_t i = 0; i < bytesRead; i += 2)
+				// {
+
 				// 	printf("%x", (unsigned char) buffer[i]);
 				// }
 				
