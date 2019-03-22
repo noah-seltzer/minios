@@ -14,19 +14,59 @@
 // #include "drivers/sdcard/SDCard.h"
 // #include "hal/hal.h"
 #define MINIOS_APP __attribute__((section(".app_entry")))
+#define WRITE_CHAR_CODE 0
+#define READ_CHAR_CODE 1
 
-typedef int (*printhandler) (const char *fmt, ...);
+// void justPrintSomething(int i) {
+// 	asm volatile ("mov x6, 'h'");
+// 	asm volatile ("svc #0x0A");
+// }
 
+void sendInterrupt(int code, char c);
 
+void printChar(char c) {
+	sendInterrupt(WRITE_CHAR_CODE, c);
+}
 
-
-
-MINIOS_APP int main (printhandler print_handler) {
-	char arr[] = "Please clap\n";
+void printCharArray(char * c) {
 	int i = 0;
-	while(arr[i] != '\0') {
-		print_handler("%c", arr[i++]);
+	while (c[i] != '\0') {
+		printChar(c[i]);
+		i++;
 	}
-	return(3);
+}
+
+
+MINIOS_APP int main (void) {
+	//char arr[] = "Please clap\n";
+	printCharArray("howdy\n");
+	//print(arr);
+	// justPrintSomething(3);
+
+	// justPrintSomething(6);
+	// asm volatile ("svc #0x0A");
+
+	// asm volatile ("svc #0x0A");
+
+	// asm volatile ("mov x0, 'o'");
+	
+	// asm volatile ("svc #0x0A");
+
+	// asm volatile ("mov x0, 'w'");
+	
+	// asm volatile ("svc #0x0A");
+
+	// asm volatile ("mov x0, 'd'");
+	
+	// asm volatile ("svc #0x0A");
+
+	// asm volatile ("mov x0, 'y'");
+	
+	// asm volatile ("svc #0x0A");
+
+	// asm volatile ("mov x0, '\n'");
+	
+	// asm volatile ("svc #0x0A");
+	return(5);
 }
 

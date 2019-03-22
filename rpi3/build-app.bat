@@ -16,6 +16,7 @@ set "libflags=-lc -lm -lgcc"
 @echo on
 "%bindir%aarch64-elf-gcc.exe" %cpuflags% %asmflags% %linkerflags% -Wl,-T,linker/app.ld ^
   src/app/main.c ^
+  src/app/app-asm.S ^
   %outflags% %libflags%
 
 @echo off
@@ -25,6 +26,7 @@ if %errorlevel% EQU 1 (goto build_fail)
 @echo on
 "%bindir%aarch64-elf-objcopy.exe" output/app.elf -O binary output/app.img
 "%bindir%aarch64-elf-objcopy.exe" output/app.elf -O binary output/echo.bin
+COPY .\output\echo.bin E:\echo.bin
 @echo off
 if %errorlevel% EQU 1 (goto build_fail)
 echo BUILD COMPLETED NORMALLY

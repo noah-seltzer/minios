@@ -14,7 +14,16 @@
 #include "drivers/sdcard/SDCard.h"
 #include "hal/hal.h"
 
+#define SVC_00 0x00
+#define SVC_01 0x01
 
+// void __svc(0x00) svc_zero(const char *string);
+// void __svc(0x01) svc_one(const char *string);
+
+// int call_system_func(void) {    
+// 	svc_zero("String to pass to SVC handler zero");    
+// 	svc_one("String to pass to a different OS function");
+// 	}
 
 
 char command_buffer[500];
@@ -26,7 +35,53 @@ int ProcessCommand(char word [], uint8_t len);
 char * GetCurrentDirectory(char subdir []);
 void GetBinary(const char * fileName);
 void executeSimpleApp(const char * fileName);
+int handleInterrupt(void){
+	
+  //printf("Please Clap\n");
+	char int_code, arg1;
+	//char arg2;
+	asm volatile ("mov %[int_code], x0\n" : [int_code] "=r" (int_code));
+	
+	switch (int_code) {
+		case 0:
+			asm volatile ("mov %[arg1], x1\n" : [arg1] "=r" (arg1));
+			printf("%c", arg1);
+	}
+	
+	//asm volatile ("mov %[arg2], x0\n" : [arg2] "=r" (arg2));
+	// asm volatile ("mov %[arg2], x1\n" : [arg2] "=r" (arg2)); 
+	// printf("%c", arg2);
+	// // printf("\n");
+	// // printf("%s", *arg2);
+	//asm volatile ("eret");
+	//return arg1;
+}
 
+void letsTryForScience(char a) {
+	//asm volatile ("mov %[arg1], x0\n" : [arg1] "=r" (arg1)); 
+	asm volatile ("mov x0, 'c'");
+	asm volatile ("svc #0x0A");
+}
+
+// __attribute__((naked)) void svc_handler(void);
+// __attribute__((naked)) void svc_handler(void) {
+// 	// printf("Please Clap\n");
+// 	// return 0;
+// 	uint32_t arg0, arg1, arg2, arg3, ret_address;
+// 	asm volatile ( "mov %[arg0], r0 \n"
+// 												"mov %[arg1], r1 \n"
+// 												"mov %[arg2], r2 \n"
+// 												"mov %[arg3], r3 \n"
+// 												"mov %[ret_address], r14 \n"
+// 												: [arg0] "=r" (arg0), // output
+// 													[arg1] "=r" (arg1),
+// 													[arg2] "=r" (arg2),
+// 													[arg3] "=r" (arg3),
+// 													[ret_address] "=r" (ret_address)
+// 												: // no input
+// 												: // Clobber list
+// 	);
+// }
 
 
 int main (void) {
@@ -38,6 +93,10 @@ int main (void) {
 
 	/* Display the SD CARD directory */
 	sdInitCard (&printf, &printf, true);
+
+	//letsTryForScience('c');
+	//asm volatile ("svc #0x0A");
+
 	printf("\n");
 	DisplayDirectory("\\*.*");
 	/* Display root directory */
@@ -95,12 +154,10 @@ int main (void) {
 				}
 				word[command_buffer_index] = '\0';
 
-				
 				int result = ProcessCommand(word, command_buffer_index);
 
 				command_buffer_index = 0;
 				printf("\r\n#");
-
 			}
 		} else {
 			printf( "%c", c );
@@ -162,7 +219,7 @@ typedef int (*printhandler) (const char *fmt, ...);
 void executeSimpleApp(const char * fileName) {
 	
 	HANDLE fHandle = sdCreateFile(fileName, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	printf("Executing %s\n", fileName);
+	printf("\nExecuting %s\n", fileName);
 	if (fHandle != 0) {
 		uint32_t bytesRead;
 		uint32_t useless;
@@ -171,17 +228,13 @@ void executeSimpleApp(const char * fileName) {
 		//printf("File is %d bytes long\n", fileSize);
 		
 		if ((sdReadFile(fHandle, &buffer[0], fileSize, &bytesRead, 0) == true))  {
-				if(strcmp(fileName, "echo.bin") == 0) {
-					int (*other_execution) (printhandler) = &buffer;
-					int pls = other_execution(&printf);
-					printf("process executed with status code %d", pls);
-				} else { 
+				
 				
 				int (*execution) (void) = &buffer;
 
 				int pls = execution();
 				printf("process executed with status code %d", pls);
-				}
+				
 				// uint32_t useless;
 				// int fileSize = sdGetFileSize(fHandle, &useless);
 				// printf("size of file: %d", fileSize);
@@ -228,9 +281,6 @@ void GetBinary(const char * fileName) {
 					printf("\n");
 					col = 0;
 				}
-				
-				
-				
 			}
 			
 			

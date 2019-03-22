@@ -386,6 +386,10 @@ irq_handler:
 	ldp	x29, x30, [sp], #16
 	eret
 
+.globl svc_handler
+svc_handler:
+	b handleInterrupt
+
 /* macro to align handlers every 0x80 bytes */
 .macro	vector handler
 .balign 0x80
@@ -402,7 +406,7 @@ VectorTable:
 	vector	hang			/* SErrorStub */
 
 	/* from current EL with sp_elx, x != 0 */
-	vector	hang			/* Synchronous */
+	vector	svc_handler		/* Synchronous */
 	vector	irq_handler		/* IRQ */
 	vector	hang			/* FIQ */
 	vector	hang			/* SErrorStub */
