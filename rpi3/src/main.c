@@ -147,23 +147,8 @@ int ProcessCommand(char word [], uint8_t len) {
 		//TODO make this process ls arguments (IE ls /home)
 	
 	} else if (strcmp(command, "cat") == 0) {
-		printf("\nopening file");
-
-		HANDLE fHandle = sdCreateFile(command_arg, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-		if (fHandle != 0) {
-			uint32_t bytesRead;
-
-			if ((sdReadFile(fHandle, &buffer[0], 500, &bytesRead, 0) == true))  {
-				buffer[bytesRead-1] = '\0';  ///insert null char
-				printf("\nFile Contents: %s", &buffer[0]);
-			} else {
-			  printf("Failed to read");
-			}
-			// Close the file
-			sdCloseHandle(fHandle);
-		} else {
-			printf("\nInvalid file to read");
-		}
+		
+		catFile(command_arg);
 
 	} else if (strcmp(command, "dump") == 0) {
 		char * argument = strtok(NULL, " ");
@@ -298,7 +283,6 @@ void GetBinary(const char * fileName) {
 	}
 }
 
-
 void DisplayDirectory(const char* dirName) {
 	HANDLE fh;
 	FIND_DATA find;
@@ -315,6 +299,25 @@ void DisplayDirectory(const char* dirName) {
 			find.CreateDT.tm_year + 1900);									// Display each entry
 	} while (sdFindNextFile(fh, &find) != 0);						// Loop finding next file
 	sdFindClose(fh);											// Close the serach handle
+}
+
+void catFile(const char* fileName) {
+	HANDLE fHandle = sdCreateFile(fileName, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	
+	if (fHandle != 0) {
+		uint32_t bytesRead;
+
+		if ((sdReadFile(fHandle, &buffer[0], 500, &bytesRead, 0) == true))  {
+			buffer[bytesRead-1] = '\0';  ///insert null char
+			printf("\nFile Contents: %s", &buffer[0]);
+		} else {
+			printf("Failed to read");
+		}
+		// Close the file
+		sdCloseHandle(fHandle);
+	} else {
+		printf("\nInvalid file to read");
+	}
 }
 
 //TODO Loader
