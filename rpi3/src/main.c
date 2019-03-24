@@ -19,6 +19,7 @@
 
 char command_buffer[500];
 char working_directory[500];
+char buffer[500];
 uint8_t directory_index = 0;
 
 void DisplayDirectory(const char*);
@@ -124,7 +125,9 @@ int main (void) {
 int ProcessCommand(char word [], uint8_t len) {
 	uint8_t i = 0;
 	char *command = strtok(word, " ");
-	//printf("Full command is %s\n", command);
+	char *command_arg = strtok(NULL, " ");
+	// printf("Full command is %s\n", command);
+
 	if (command[0] == '$') {
 		char * bin = strtok(command, "$");
 			executeSimpleApp(bin);
@@ -143,6 +146,25 @@ int ProcessCommand(char word [], uint8_t len) {
 		//DisplayDirectory(GetCurrentDirectory(argument));
 		//TODO make this process ls arguments (IE ls /home)
 	
+	} else if (strcmp(command, "cat") == 0) {
+		printf("\nopening file");
+
+		HANDLE fHandle = sdCreateFile(command_arg, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+		if (fHandle != 0) {
+			uint32_t bytesRead;
+
+			if ((sdReadFile(fHandle, &buffer[0], 500, &bytesRead, 0) == true))  {
+				buffer[bytesRead-1] = '\0';  ///insert null char
+				printf("\nFile Contents: %s", &buffer[0]);
+			} else {
+			  printf("Failed to read");
+			}
+			// Close the file
+			sdCloseHandle(fHandle);
+		} else {
+			printf("\nInvalid file to read");
+		}
+
 	} else if (strcmp(command, "dump") == 0) {
 		char * argument = strtok(NULL, " ");
 		if (argument == NULL) {
