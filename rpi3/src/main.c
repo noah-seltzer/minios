@@ -39,7 +39,7 @@ int main (void) {
 	/* Display the SD CARD directory */
 	sdInitCard (&printf, &printf, true);
 	printf("\n");
-	DisplayDirectory("\\*.*");
+	// DisplayDirectory("\\*.*");
 	/* Display root directory */
 	/*printf("Directory (/): \n");
 	DisplayDirectory("\\*.*");
@@ -133,7 +133,13 @@ int ProcessCommand(char word [], uint8_t len) {
 	} else if (strcmp(command, "ls") == 0 || strcmp(command, "LS") == 0) {
 		char * argument = strtok(NULL, " ");
 		char * str = GetCurrentDirectory(argument);
-		printf(str);
+
+		//HANDLE fHandle = sdCreateFile("\\*.*", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+		//if (fHandle != 0) {
+			DisplayDirectory("\\*.*");
+		// }
+
+		// printf(str);
 		//DisplayDirectory(GetCurrentDirectory(argument));
 		//TODO make this process ls arguments (IE ls /home)
 	
@@ -149,6 +155,7 @@ int ProcessCommand(char word [], uint8_t len) {
 	}
 	return 0;
 }
+
 
 char * GetCurrentDirectory(char subdir []) {
 	
@@ -275,22 +282,17 @@ void DisplayDirectory(const char* dirName) {
 	FIND_DATA find;
 	char* month[12] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 	fh = sdFindFirstFile(dirName, &find);							// Find first file
+	printf("\n");
 	do {
 		if (find.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY)
-			printf("%s <DIR>\n", find.cFileName);
-		else printf("%c%c%c%c%c%c%c%c.%c%c%c Size: %9lu bytes, %2d/%s/%4d, LFN: %s\n",
-			find.cAlternateFileName[0], find.cAlternateFileName[1],
-			find.cAlternateFileName[2], find.cAlternateFileName[3],
-			find.cAlternateFileName[4], find.cAlternateFileName[5],
-			find.cAlternateFileName[6], find.cAlternateFileName[7],
-			find.cAlternateFileName[8], find.cAlternateFileName[9],
-			find.cAlternateFileName[10],
+			printf("%s <DIR>\n\0", find.cFileName);
+		else printf("File Name: %s Size: %9lu bytes, %2d/%s/%4d\n\0",
+			find.cFileName,
 			(unsigned long)find.nFileSizeLow,
 			find.CreateDT.tm_mday, month[find.CreateDT.tm_mon],
-			find.CreateDT.tm_year + 1900,
-			find.cFileName);										// Display each entry
+			find.CreateDT.tm_year + 1900);									// Display each entry
 	} while (sdFindNextFile(fh, &find) != 0);						// Loop finding next file
-	sdFindClose(fh);												// Close the serach handle
+	sdFindClose(fh);											// Close the serach handle
 }
 
 //TODO Loader
