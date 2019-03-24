@@ -150,7 +150,6 @@ int ProcessCommand(char word [], uint8_t len) {
 
 	} else if (strcmp(command, "cd") == 0) {
 		if (strcmp(command_arg, "..") == 0) {
-			working_directory[500] = "\0";
 			working_directory[500] = "\\*.*";
 			printf("working directory: %s", working_directory);
 		} else {
