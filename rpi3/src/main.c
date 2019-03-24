@@ -35,17 +35,27 @@ int ProcessCommand(char word [], uint8_t len);
 char * GetCurrentDirectory(char subdir []);
 void GetBinary(const char * fileName);
 void executeSimpleApp(const char * fileName);
+void tryToPassAChar(const char c);
+
 int handleInterrupt(void){
 	
   //printf("Please Clap\n");
-	char int_code, arg1;
+	char int_code, arg1, c;
 	//char arg2;
 	asm volatile ("mov %[int_code], x0\n" : [int_code] "=r" (int_code));
-	
+	//printf("interrupt recieved, status code %d\n", int_code);
 	switch (int_code) {
 		case 0:
 			asm volatile ("mov %[arg1], x1\n" : [arg1] "=r" (arg1));
 			printf("%c", arg1);
+			break;
+		case 1:
+			c = hal_io_serial_getc( SerialA );
+			hal_io_serial_putc( SerialA, c );
+			printf("%c", c);
+			tryToPassAChar(c);
+			
+			break;
 	}
 	
 	//asm volatile ("mov %[arg2], x0\n" : [arg2] "=r" (arg2));

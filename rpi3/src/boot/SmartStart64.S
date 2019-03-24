@@ -390,6 +390,10 @@ irq_handler:
 svc_handler:
 	b handleInterrupt
 
+.globl tryToPassAChar
+tryToPassAChar:
+	mov x13, x0
+
 /* macro to align handlers every 0x80 bytes */
 .macro	vector handler
 .balign 0x80

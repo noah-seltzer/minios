@@ -28,45 +28,49 @@ void printChar(char c) {
 	sendInterrupt(WRITE_CHAR_CODE, c);
 }
 
-void printCharArray(char * c) {
-	int i = 0;
-	while (c[i] != '\0') {
-		printChar(c[i]);
-		i++;
-	}
+char readChar(void) {
+	char c;
+	sendInterrupt(READ_CHAR_CODE, c);
+	// c = _read_char_from_register();
+	asm volatile ("mov %[c], x13\n" : [c] "=r" (c));
+	return c;
 }
 
 
 MINIOS_APP int main (void) {
-	//char arr[] = "Please clap\n";
-	printCharArray("howdy\n");
-	//print(arr);
-	// justPrintSomething(3);
 
-	// justPrintSomething(6);
-	// asm volatile ("svc #0x0A");
+	char c;
+	printChar('e');
+	printChar('n');
+	printChar('t');
+	printChar('e');
+	printChar('r');
+	printChar(' ');
+	printChar('c');
+	printChar('h');
+	printChar('a');
+	printChar('r');
+	printChar(':');
+	printChar(' ');
+	printChar('\n');
 
-	// asm volatile ("svc #0x0A");
+	c = readChar();
 
-	// asm volatile ("mov x0, 'o'");
-	
-	// asm volatile ("svc #0x0A");
+	printChar('\n');
+	printChar('y');
+	printChar('o');
+	printChar('u');
+	printChar(' ');
+	printChar('t');
+	printChar('y');
+	printChar('p');
+	printChar('e');
+	printChar('d');
+	printChar(':');
+	printChar(' ');
+	printChar(c);
+	printChar('\n');
 
-	// asm volatile ("mov x0, 'w'");
-	
-	// asm volatile ("svc #0x0A");
-
-	// asm volatile ("mov x0, 'd'");
-	
-	// asm volatile ("svc #0x0A");
-
-	// asm volatile ("mov x0, 'y'");
-	
-	// asm volatile ("svc #0x0A");
-
-	// asm volatile ("mov x0, '\n'");
-	
-	// asm volatile ("svc #0x0A");
 	return(5);
 }
 
