@@ -18,7 +18,7 @@
 
 
 char command_buffer[500];
-char working_directory[500];
+char working_directory[500] = "\\*.*";
 char buffer[500];
 uint8_t directory_index = 0;
 
@@ -27,6 +27,7 @@ int ProcessCommand(char word [], uint8_t len);
 char * GetCurrentDirectory(char subdir []);
 void GetBinary(const char * fileName);
 void executeSimpleApp(const char * fileName);
+void catFile(const char* fileName);
 
 
 
@@ -134,22 +135,27 @@ int ProcessCommand(char word [], uint8_t len) {
 	} else if (strcmp(command, "sysinfo") == 0) {
 		printf("\nSystem information\n OS Name: TestOS\n OS Version: 2.0\n OS Manufacturer: Sad BCIT Students");
 	} else if (strcmp(command, "ls") == 0 || strcmp(command, "LS") == 0) {
+		printf("\n%s\n", working_directory);
 		char * argument = strtok(NULL, " ");
 		char * str = GetCurrentDirectory(argument);
-
-		//HANDLE fHandle = sdCreateFile("\\*.*", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-		//if (fHandle != 0) {
-			DisplayDirectory("\\*.*");
-		// }
+		DisplayDirectory(working_directory);
 
 		// printf(str);
 		//DisplayDirectory(GetCurrentDirectory(argument));
 		//TODO make this process ls arguments (IE ls /home)
 	
 	} else if (strcmp(command, "cat") == 0) {
-		
+
 		catFile(command_arg);
 
+	} else if (strcmp(command, "cd") == 0) {
+		if (strcmp(command_arg, "..") == 0) {
+			working_directory[500] = "\0";
+			working_directory[500] = "\\*.*";
+			printf("working directory: %s", working_directory);
+		} else {
+			*working_directory = command_arg;
+		}
 	} else if (strcmp(command, "dump") == 0) {
 		char * argument = strtok(NULL, " ");
 		if (argument == NULL) {
@@ -292,13 +298,15 @@ void DisplayDirectory(const char* dirName) {
 	do {
 		if (find.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY)
 			printf("%s <DIR>\n\0", find.cFileName);
-		else printf("File Name: %s Size: %9lu bytes, %2d/%s/%4d\n\0",
-			find.cFileName,
-			(unsigned long)find.nFileSizeLow,
-			find.CreateDT.tm_mday, month[find.CreateDT.tm_mon],
-			find.CreateDT.tm_year + 1900);									// Display each entry
+		else printf("%s \n\0", find.cFileName);									// Display each entry
 	} while (sdFindNextFile(fh, &find) != 0);						// Loop finding next file
 	sdFindClose(fh);											// Close the serach handle
+
+			// else printf("File Name: %s Size: %9lu bytes, %2d/%s/%4d\n\0",
+			// find.cFileName,
+			// (unsigned long)find.nFileSizeLow,
+			// find.CreateDT.tm_mday, month[find.CreateDT.tm_mon],
+			// find.CreateDT.tm_year + 1900);		
 }
 
 void catFile(const char* fileName) {
