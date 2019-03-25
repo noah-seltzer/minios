@@ -27,7 +27,9 @@
 
 
 char command_buffer[500];
-char working_directory[500];
+char working_directory[500] = "\\";
+//char working_directory[500] = "\\*.*";
+char buffer[500];
 uint8_t directory_index = 0;
 
 void DisplayDirectory(const char*);
@@ -35,6 +37,7 @@ int ProcessCommand(char word [], uint8_t len);
 char * GetCurrentDirectory(char subdir []);
 void GetBinary(const char * fileName);
 void executeSimpleApp(const char * fileName);
+void catFile(const char* fileName);
 void returnCharToExecutable(const char c);
 void processCommandLoop(void);
 
@@ -74,7 +77,7 @@ int main (void) {
 	sdInitCard (&printf, &printf, true);
 
 	printf("\n");
-	
+  
 	/* Display root directory */
 	printf("Directory (/): \n");
 	DisplayDirectory("\\*.*");
@@ -138,18 +141,52 @@ void processCommandLoop(void) {
 int ProcessCommand(char word [], uint8_t len) {
 	uint8_t i = 0;
 	char *command = strtok(word, " ");
-	//printf("Full command is %s\n", command);
+	char *command_arg = strtok(NULL, " ");
+	// printf("Full command is %s\n", command);
+
 	if (command[0] == '$') {
 		char * bin = strtok(command, "$");
 			executeSimpleApp(bin);
-		
+	} else if (strcmp(command, "sysinfo") == 0) {
+		printf("\nSystem information\n OS Name: TestOS\n OS Version: 2.0\n OS Manufacturer: Sad BCIT Students");
 	} else if (strcmp(command, "ls") == 0 || strcmp(command, "LS") == 0) {
+		printf("\n%s", working_directory);
 		char * argument = strtok(NULL, " ");
 		char * str = GetCurrentDirectory(argument);
-		printf(str);
-		//DisplayDirectory(GetCurrentDirectory(argument));
-		//TODO make this process ls arguments (IE ls /home)
+
+		char str_dir[500];
+		strcpy(str_dir, working_directory);
+		char *p = str_dir;
+		strcpy(&str_dir[strlen(p)], "*.*");
+		DisplayDirectory(str_dir);
 	
+	} else if (strcmp(command, "cat") == 0) {
+
+		catFile(command_arg);
+
+	} else if (strcmp(command, "cd") == 0) {
+		// removes *.*
+		char *p = working_directory;
+		//p[strlen(p)-3] = 0;
+
+		if (strcmp(command_arg, "..") == 0) {
+			// if root
+			if (strlen(working_directory) < 2) {
+				strcpy(&working_directory, "\\");
+				//strcpy(&working_directory, "\\*.*");
+			} else {
+				// if not root
+				do {
+					p[strlen(p)-1] = 0;
+				} while (p[strlen(p)-1] != '\\');
+				//strcpy(&working_directory[strlen(p)], "*.*");
+			}
+		} else {
+			strcpy(&working_directory[strlen(p)], command_arg);
+			strcpy(&working_directory[strlen(p)], "\\");
+		}
+		printf("\nworking directory: %s\n", working_directory);
+
 	} else if (strcmp(command, "dump") == 0) {
 		char * argument = strtok(NULL, " ");
 		if (argument == NULL) {
@@ -162,6 +199,7 @@ int ProcessCommand(char word [], uint8_t len) {
 	}
 	return 0;
 }
+
 
 char * GetCurrentDirectory(char subdir []) {
 	
@@ -240,27 +278,41 @@ void GetBinary(const char * fileName) {
 	}
 }
 
-
 void DisplayDirectory(const char* dirName) {
 	HANDLE fh;
 	FIND_DATA find;
 	char* month[12] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 	fh = sdFindFirstFile(dirName, &find);							// Find first file
+	printf("\n");
 	do {
 		if (find.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY)
-			printf("%s <DIR>\n", find.cFileName);
-		else printf("%c%c%c%c%c%c%c%c.%c%c%c Size: %9lu bytes, %2d/%s/%4d, LFN: %s\n",
-			find.cAlternateFileName[0], find.cAlternateFileName[1],
-			find.cAlternateFileName[2], find.cAlternateFileName[3],
-			find.cAlternateFileName[4], find.cAlternateFileName[5],
-			find.cAlternateFileName[6], find.cAlternateFileName[7],
-			find.cAlternateFileName[8], find.cAlternateFileName[9],
-			find.cAlternateFileName[10],
-			(unsigned long)find.nFileSizeLow,
-			find.CreateDT.tm_mday, month[find.CreateDT.tm_mon],
-			find.CreateDT.tm_year + 1900,
-			find.cFileName);										// Display each entry
+			printf("%s <DIR>\n\0", find.cFileName);
+		else printf("%s \n\0", find.cFileName);									// Display each entry
 	} while (sdFindNextFile(fh, &find) != 0);						// Loop finding next file
-	sdFindClose(fh);												// Close the serach handle
+	sdFindClose(fh);											// Close the serach handle
+}
+
+void catFile(const char* fileName) {
+	char file_dir[500];
+	strcpy(file_dir, working_directory);
+	char *p = file_dir;
+	strcpy(&file_dir[strlen(p)], fileName);
+
+	HANDLE fHandle = sdCreateFile(file_dir, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	
+	if (fHandle != 0) {
+		uint32_t bytesRead;
+
+		if ((sdReadFile(fHandle, &buffer[0], 500, &bytesRead, 0) == true))  {
+			buffer[bytesRead-1] = '\0';  ///insert null char
+			printf("\nFile Contents: %s", &buffer[0]);
+		} else {
+			printf("\nFailed to read");
+		}
+		// Close the file
+		sdCloseHandle(fHandle);
+	} else {
+		printf("\nInvalid file to read");
+	}
 }
 
