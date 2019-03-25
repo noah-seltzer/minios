@@ -35,7 +35,7 @@ int ProcessCommand(char word [], uint8_t len);
 char * GetCurrentDirectory(char subdir []);
 void GetBinary(const char * fileName);
 void executeSimpleApp(const char * fileName);
-void tryToPassAChar(const char c);
+void returnCharToExecutable(const char c);
 
 int handleInterrupt(void){
 	
@@ -53,7 +53,7 @@ int handleInterrupt(void){
 			c = hal_io_serial_getc( SerialA );
 			hal_io_serial_putc( SerialA, c );
 			printf("%c", c);
-			tryToPassAChar(c);
+			returnCharToExecutable(c);
 			
 			break;
 	}

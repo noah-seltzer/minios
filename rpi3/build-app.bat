@@ -25,8 +25,8 @@ if %errorlevel% EQU 1 (goto build_fail)
 @REM LINKER COMMAND LINE
 @echo on
 "%bindir%aarch64-elf-objcopy.exe" output/app.elf -O binary output/app.img
-"%bindir%aarch64-elf-objcopy.exe" output/app.elf -O binary output/echo.bin
-COPY .\output\echo.bin E:\echo.bin
+"%bindir%aarch64-elf-objcopy.exe" output/app.elf -O binary output/app.bin
+COPY .\output\app.bin E:\return2.bin
 @echo off
 if %errorlevel% EQU 1 (goto build_fail)
 echo BUILD COMPLETED NORMALLY

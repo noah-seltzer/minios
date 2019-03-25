@@ -38,39 +38,39 @@ char readChar(void) {
 
 
 MINIOS_APP int main (void) {
+	
+	//char c;
+	// printChar('h');
+	// printChar('e');
+	// printChar('l');
+	// printChar('l');
+	// printChar('o');
+	// printChar(' ');
+	// printChar('w');
+	// printChar('o');
+	// printChar('r');
+	// printChar('l');
+	// printChar('d');
+	// printChar('\n');
 
-	char c;
-	printChar('e');
-	printChar('n');
-	printChar('t');
-	printChar('e');
-	printChar('r');
-	printChar(' ');
-	printChar('c');
-	printChar('h');
-	printChar('a');
-	printChar('r');
-	printChar(':');
-	printChar(' ');
-	printChar('\n');
 
-	c = readChar();
+	// c = readChar();
 
-	printChar('\n');
-	printChar('y');
-	printChar('o');
-	printChar('u');
-	printChar(' ');
-	printChar('t');
-	printChar('y');
-	printChar('p');
-	printChar('e');
-	printChar('d');
-	printChar(':');
-	printChar(' ');
-	printChar(c);
-	printChar('\n');
+	// printChar('\n');
+	// printChar('y');
+	// printChar('o');
+	// printChar('u');
+	// printChar(' ');
+	// printChar('t');
+	// printChar('y');
+	// printChar('p');
+	// printChar('e');
+	// printChar('d');
+	// printChar(':');
+	// printChar(' ');
+	// printChar(c);
+	// printChar('\n');
 
-	return(5);
+	return(2);
 }
 
