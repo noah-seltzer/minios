@@ -18,7 +18,8 @@
 
 
 char command_buffer[500];
-char working_directory[500] = "\\*.*";
+char working_directory[500] = "\\";
+//char working_directory[500] = "\\*.*";
 char buffer[500];
 uint8_t directory_index = 0;
 
@@ -135,10 +136,17 @@ int ProcessCommand(char word [], uint8_t len) {
 	} else if (strcmp(command, "sysinfo") == 0) {
 		printf("\nSystem information\n OS Name: TestOS\n OS Version: 2.0\n OS Manufacturer: Sad BCIT Students");
 	} else if (strcmp(command, "ls") == 0 || strcmp(command, "LS") == 0) {
-		printf("\n%s\n", working_directory);
+		printf("\n%s", working_directory);
 		char * argument = strtok(NULL, " ");
 		char * str = GetCurrentDirectory(argument);
-		DisplayDirectory(working_directory);
+
+		char str_dir[500];
+		strcpy(str_dir, working_directory);
+		char *p = str_dir;
+		strcpy(&str_dir[strlen(p)], "*.*");
+		DisplayDirectory(str_dir);
+
+		//DisplayDirectory(working_directory);
 
 		// printf(str);
 		//DisplayDirectory(GetCurrentDirectory(argument));
@@ -149,12 +157,28 @@ int ProcessCommand(char word [], uint8_t len) {
 		catFile(command_arg);
 
 	} else if (strcmp(command, "cd") == 0) {
+		// removes *.*
+		char *p = working_directory;
+		//p[strlen(p)-3] = 0;
+
 		if (strcmp(command_arg, "..") == 0) {
-			working_directory[500] = "\\*.*";
-			printf("working directory: %s", working_directory);
+			// if root
+			if (strlen(working_directory) < 2) {
+				strcpy(&working_directory, "\\");
+				//strcpy(&working_directory, "\\*.*");
+			} else {
+				// if not root
+				do {
+					p[strlen(p)-1] = 0;
+				} while (p[strlen(p)-1] != '\\');
+				//strcpy(&working_directory[strlen(p)], "*.*");
+			}
 		} else {
-			*working_directory = command_arg;
+			strcpy(&working_directory[strlen(p)], command_arg);
+			strcpy(&working_directory[strlen(p)], "\\");
 		}
+		printf("\nworking directory: %s\n", working_directory);
+
 	} else if (strcmp(command, "dump") == 0) {
 		char * argument = strtok(NULL, " ");
 		if (argument == NULL) {
