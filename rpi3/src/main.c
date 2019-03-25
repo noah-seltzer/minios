@@ -333,7 +333,12 @@ void DisplayDirectory(const char* dirName) {
 }
 
 void catFile(const char* fileName) {
-	HANDLE fHandle = sdCreateFile(fileName, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	char file_dir[500];
+	strcpy(file_dir, working_directory);
+	char *p = file_dir;
+	strcpy(&file_dir[strlen(p)], fileName);
+
+	HANDLE fHandle = sdCreateFile(file_dir, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	
 	if (fHandle != 0) {
 		uint32_t bytesRead;
@@ -342,7 +347,7 @@ void catFile(const char* fileName) {
 			buffer[bytesRead-1] = '\0';  ///insert null char
 			printf("\nFile Contents: %s", &buffer[0]);
 		} else {
-			printf("Failed to read");
+			printf("\nFailed to read");
 		}
 		// Close the file
 		sdCloseHandle(fHandle);
