@@ -1,4 +1,4 @@
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 1
 
 
    1              		.arch armv8-a
@@ -6,849 +6,896 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
    3              		.text
    4              		.align	2
    5              		.p2align 4,,15
-   6              		.global	GetCurrentDirectory
-   7              		.type	GetCurrentDirectory, %function
-   8              	GetCurrentDirectory:
-   9 0000 F37BBFA9 		stp	x19, x30, [sp, -16]!
-  10 0004 A00580D2 		mov	x0, 45
-  11 0008 00000094 		bl	malloc
-  12 000c F30300AA 		mov	x19, x0
-  13 0010 01000090 		adrp	x1, .LC13
-  14 0014 21000091 		add	x1, x1, :lo12:.LC13
-  15 0018 00000094 		bl	strcpy
-  16 001c E00313AA 		mov	x0, x19
-  17 0020 F37BC1A8 		ldp	x19, x30, [sp], 16
-  18 0024 C0035FD6 		ret
-  19              		.size	GetCurrentDirectory, .-GetCurrentDirectory
-  20              		.align	2
-  21 0028 1F2003D5 		.p2align 4,,15
-  21      1F2003D5 
-  22              		.global	executeSimpleApp
-  23              		.type	executeSimpleApp, %function
-  24              	executeSimpleApp:
-  25 0030 FD7BBCA9 		stp	x29, x30, [sp, -64]!
-  26 0034 06008052 		mov	w6, 0
-  27 0038 05108052 		mov	w5, 128
-  28 003c FD030091 		mov	x29, sp
-  29 0040 F35301A9 		stp	x19, x20, [sp, 16]
-  30 0044 64008052 		mov	w4, 3
-  31 0048 03008052 		mov	w3, 0
-  32 004c F51300F9 		str	x21, [sp, 32]
-  33 0050 02008052 		mov	w2, 0
-  34 0054 F40300AA 		mov	x20, x0
-  35 0058 0100B052 		mov	w1, -2147483648
-  36 005c 00000094 		bl	sdCreateFile
-  37 0060 F303002A 		mov	w19, w0
-  38 0064 E10314AA 		mov	x1, x20
-  39 0068 00000090 		adrp	x0, .LC14
-  40 006c 00000091 		add	x0, x0, :lo12:.LC14
-  41 0070 00000094 		bl	printf
-  42 0074 D3000035 		cbnz	w19, .L13
-  43 0078 BF030091 		mov	sp, x29
-  44 007c F35341A9 		ldp	x19, x20, [sp, 16]
-  45 0080 F51340F9 		ldr	x21, [sp, 32]
-  46 0084 FD7BC4A8 		ldp	x29, x30, [sp], 64
-  47 0088 C0035FD6 		ret
-  48              		.p2align 2
-  49              	.L13:
-  50 008c A1F30091 		add	x1, x29, 60
-  51 0090 E003132A 		mov	w0, w19
-  52 0094 00000094 		bl	sdGetFileSize
-  53 0098 017C4093 		sxtw	x1, w0
-  54 009c 213C0091 		add	x1, x1, 15
-  55 00a0 F5030091 		mov	x21, sp
-  56 00a4 21EC7C92 		and	x1, x1, -16
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 2
+   6              		.global	handleInterrupt
+   7              		.type	handleInterrupt, %function
+   8              	handleInterrupt:
+   9              		// Start of user assembly
+  10              	// 45 "src/main.c" 1
+  11 0000 E00300AA 		mov x0, x0
+  12              	
+  13              	// 0 "" 2
+  14              		// End of user assembly
+  15 0004 001C0072 		ands	w0, w0, 255
+  16 0008 A0020054 		beq	.L2
+  17 000c 1F040071 		cmp	w0, 1
+  18 0010 41020054 		bne	.L9
+  19 0014 F353BEA9 		stp	x19, x20, [sp, -32]!
+  20 0018 00008052 		mov	w0, 0
+  21 001c FE0B00F9 		str	x30, [sp, 16]
+  22 0020 00000094 		bl	hal_io_serial_getc
+  23 0024 141C0012 		and	w20, w0, 255
+  24 0028 00008052 		mov	w0, 0
+  25 002c E103142A 		mov	w1, w20
+  26 0030 00000094 		bl	hal_io_serial_putc
+  27 0034 E103142A 		mov	w1, w20
+  28 0038 00000090 		adrp	x0, .LC13
+  29 003c 00000091 		add	x0, x0, :lo12:.LC13
+  30 0040 00000094 		bl	printf
+  31 0044 E003142A 		mov	w0, w20
+  32 0048 00000094 		bl	tryToPassAChar
+  33 004c FE0B40F9 		ldr	x30, [sp, 16]
+  34 0050 F353C2A8 		ldp	x19, x20, [sp], 32
+  35 0054 C0035FD6 		ret
+  36              		.p2align 2
+  37              	.L9:
+  38 0058 C0035FD6 		ret
+  39              		.p2align 2
+  40              	.L2:
+  41              		// Start of user assembly
+  42              	// 49 "src/main.c" 1
+  43 005c E10301AA 		mov x1, x1
+  44              	
+  45              	// 0 "" 2
+  46              		// End of user assembly
+  47 0060 00000090 		adrp	x0, .LC13
+  48 0064 211C0012 		and	w1, w1, 255
+  49 0068 00000091 		add	x0, x0, :lo12:.LC13
+  50 006c 00000014 		b	printf
+  51              		.size	handleInterrupt, .-handleInterrupt
+  52              		.align	2
+  53              		.p2align 4,,15
+  54              		.global	letsTryForScience
+  55              		.type	letsTryForScience, %function
+  56              	letsTryForScience:
+  57              		// Start of user assembly
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 2
 
 
-  57 00a8 E203002A 		mov	w2, w0
-  58 00ac FF6321CB 		sub	sp, sp, x1
-  59 00b0 040080D2 		mov	x4, 0
-  60 00b4 A3E30091 		add	x3, x29, 56
-  61 00b8 E003132A 		mov	w0, w19
-  62 00bc E1030091 		mov	x1, sp
-  63 00c0 00000094 		bl	sdReadFile
-  64 00c4 1F1C0072 		tst	w0, 255
-  65 00c8 E0010054 		beq	.L6
-  66 00cc 01000090 		adrp	x1, .LC15
-  67 00d0 21000091 		add	x1, x1, :lo12:.LC15
-  68 00d4 E00314AA 		mov	x0, x20
-  69 00d8 00000094 		bl	strcmp
-  70 00dc A0020035 		cbnz	w0, .L7
-  71 00e0 E1030091 		mov	x1, sp
-  72 00e4 00000090 		adrp	x0, printf
-  73 00e8 00000091 		add	x0, x0, :lo12:printf
-  74 00ec 20003FD6 		blr	x1
-  75 00f0 02000090 		adrp	x2, .LC16
-  76 00f4 E103002A 		mov	w1, w0
-  77 00f8 40000091 		add	x0, x2, :lo12:.LC16
-  78 00fc 00000094 		bl	printf
-  79 0100 04000014 		b	.L8
-  80              		.p2align 2
-  81              	.L6:
-  82 0104 00000090 		adrp	x0, .LC17
-  83 0108 00000091 		add	x0, x0, :lo12:.LC17
-  84 010c 00000094 		bl	printf
-  85              	.L8:
-  86 0110 E003132A 		mov	w0, w19
-  87 0114 00000094 		bl	sdCloseHandle
-  88 0118 BF020091 		mov	sp, x21
-  89 011c BF030091 		mov	sp, x29
-  90 0120 F35341A9 		ldp	x19, x20, [sp, 16]
-  91 0124 F51340F9 		ldr	x21, [sp, 32]
-  92 0128 FD7BC4A8 		ldp	x29, x30, [sp], 64
-  93 012c C0035FD6 		ret
-  94              		.p2align 2
-  95              	.L7:
-  96 0130 E0030091 		mov	x0, sp
-  97 0134 00003FD6 		blr	x0
-  98 0138 02000090 		adrp	x2, .LC16
-  99 013c E103002A 		mov	w1, w0
- 100 0140 40000091 		add	x0, x2, :lo12:.LC16
- 101 0144 00000094 		bl	printf
- 102 0148 F2FFFF17 		b	.L8
- 103              		.size	executeSimpleApp, .-executeSimpleApp
- 104              		.align	2
- 105 014c 1F2003D5 		.p2align 4,,15
- 106              		.global	GetBinary
- 107              		.type	GetBinary, %function
- 108              	GetBinary:
- 109 0150 FD7BB9A9 		stp	x29, x30, [sp, -112]!
- 110 0154 06008052 		mov	w6, 0
- 111 0158 05108052 		mov	w5, 128
- 112 015c FD030091 		mov	x29, sp
- 113 0160 F35301A9 		stp	x19, x20, [sp, 16]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 3
+  58              	// 72 "src/main.c" 1
+  59 0070 600C80D2 		mov x0, 'c'
+  60              	// 0 "" 2
+  61              	// 73 "src/main.c" 1
+  62 0074 410100D4 		svc #0x0A
+  63              	// 0 "" 2
+  64              		// End of user assembly
+  65 0078 C0035FD6 		ret
+  66              		.size	letsTryForScience, .-letsTryForScience
+  67              		.align	2
+  68 007c 1F2003D5 		.p2align 4,,15
+  69              		.global	GetCurrentDirectory
+  70              		.type	GetCurrentDirectory, %function
+  71              	GetCurrentDirectory:
+  72 0080 F37BBFA9 		stp	x19, x30, [sp, -16]!
+  73 0084 A00580D2 		mov	x0, 45
+  74 0088 00000094 		bl	malloc
+  75 008c F30300AA 		mov	x19, x0
+  76 0090 01000090 		adrp	x1, .LC14
+  77 0094 21000091 		add	x1, x1, :lo12:.LC14
+  78 0098 00000094 		bl	strcpy
+  79 009c E00313AA 		mov	x0, x19
+  80 00a0 F37BC1A8 		ldp	x19, x30, [sp], 16
+  81 00a4 C0035FD6 		ret
+  82              		.size	GetCurrentDirectory, .-GetCurrentDirectory
+  83              		.align	2
+  84 00a8 1F2003D5 		.p2align 4,,15
+  84      1F2003D5 
+  85              		.global	executeSimpleApp
+  86              		.type	executeSimpleApp, %function
+  87              	executeSimpleApp:
+  88 00b0 FD7BBDA9 		stp	x29, x30, [sp, -48]!
+  89 00b4 06008052 		mov	w6, 0
+  90 00b8 05108052 		mov	w5, 128
+  91 00bc FD030091 		mov	x29, sp
+  92 00c0 F35301A9 		stp	x19, x20, [sp, 16]
+  93 00c4 64008052 		mov	w4, 3
+  94 00c8 03008052 		mov	w3, 0
+  95 00cc 02008052 		mov	w2, 0
+  96 00d0 F40300AA 		mov	x20, x0
+  97 00d4 0100B052 		mov	w1, -2147483648
+  98 00d8 00000094 		bl	sdCreateFile
+  99 00dc E10314AA 		mov	x1, x20
+ 100 00e0 F303002A 		mov	w19, w0
+ 101 00e4 00000090 		adrp	x0, .LC15
+ 102 00e8 00000091 		add	x0, x0, :lo12:.LC15
+ 103 00ec 00000094 		bl	printf
+ 104 00f0 B3000035 		cbnz	w19, .L21
+ 105 00f4 BF030091 		mov	sp, x29
+ 106 00f8 F35341A9 		ldp	x19, x20, [sp, 16]
+ 107 00fc FD7BC3A8 		ldp	x29, x30, [sp], 48
+ 108 0100 C0035FD6 		ret
+ 109              		.p2align 2
+ 110              	.L21:
+ 111 0104 A1B30091 		add	x1, x29, 44
+ 112 0108 E003132A 		mov	w0, w19
+ 113 010c 00000094 		bl	sdGetFileSize
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 3
 
 
- 114 0164 64008052 		mov	w4, 3
- 115 0168 03008052 		mov	w3, 0
- 116 016c F55B02A9 		stp	x21, x22, [sp, 32]
- 117 0170 02008052 		mov	w2, 0
- 118 0174 F30300AA 		mov	x19, x0
- 119 0178 F76303A9 		stp	x23, x24, [sp, 48]
- 120 017c 0100B052 		mov	w1, -2147483648
- 121 0180 F96B04A9 		stp	x25, x26, [sp, 64]
- 122 0184 FB7305A9 		stp	x27, x28, [sp, 80]
- 123 0188 00000094 		bl	sdCreateFile
- 124 018c F703002A 		mov	w23, w0
- 125 0190 E10313AA 		mov	x1, x19
- 126 0194 00000090 		adrp	x0, .LC18
- 127 0198 00000091 		add	x0, x0, :lo12:.LC18
- 128 019c 00000094 		bl	printf
- 129 01a0 37010035 		cbnz	w23, .L29
- 130 01a4 BF030091 		mov	sp, x29
- 131 01a8 F35341A9 		ldp	x19, x20, [sp, 16]
- 132 01ac F55B42A9 		ldp	x21, x22, [sp, 32]
- 133 01b0 F76343A9 		ldp	x23, x24, [sp, 48]
- 134 01b4 F96B44A9 		ldp	x25, x26, [sp, 64]
- 135 01b8 FB7345A9 		ldp	x27, x28, [sp, 80]
- 136 01bc FD7BC7A8 		ldp	x29, x30, [sp], 112
- 137 01c0 C0035FD6 		ret
- 138              		.p2align 2
- 139              	.L29:
- 140 01c4 A1B30191 		add	x1, x29, 108
- 141 01c8 E003172A 		mov	w0, w23
- 142 01cc 00000094 		bl	sdGetFileSize
- 143 01d0 017C4093 		sxtw	x1, w0
- 144 01d4 213C0091 		add	x1, x1, 15
- 145 01d8 F8030091 		mov	x24, sp
- 146 01dc 21EC7C92 		and	x1, x1, -16
- 147 01e0 E203002A 		mov	w2, w0
- 148 01e4 FF6321CB 		sub	sp, sp, x1
- 149 01e8 040080D2 		mov	x4, 0
- 150 01ec A3A30191 		add	x3, x29, 104
- 151 01f0 E003172A 		mov	w0, w23
- 152 01f4 E1030091 		mov	x1, sp
- 153 01f8 FA030091 		mov	x26, sp
- 154 01fc 00000094 		bl	sdReadFile
- 155 0200 1F1C0072 		tst	w0, 255
- 156 0204 80060054 		beq	.L16
- 157 0208 A06B40B9 		ldr	w0, [x29, 104]
- 158 020c E0040034 		cbz	w0, .L18
- 159 0210 19000090 		adrp	x25, .LC20
- 160 0214 39030091 		add	x25, x25, :lo12:.LC20
- 161 0218 1B000090 		adrp	x27, .LC21
- 162 021c 7B030091 		add	x27, x27, :lo12:.LC21
- 163 0220 1C000090 		adrp	x28, .LC19
- 164 0224 9C030091 		add	x28, x28, :lo12:.LC19
- 165 0228 16008052 		mov	w22, 0
- 166 022c 14008052 		mov	w20, 0
- 167 0230 130080D2 		mov	x19, 0
- 168 0234 1F2003D5 		.p2align 3
- 169              	.L17:
- 170 0238 E00319AA 		mov	x0, x25
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 4
+ 114 0110 017C4093 		sxtw	x1, w0
+ 115 0114 213C0091 		add	x1, x1, 15
+ 116 0118 F4030091 		mov	x20, sp
+ 117 011c 21EC7C92 		and	x1, x1, -16
+ 118 0120 E203002A 		mov	w2, w0
+ 119 0124 FF6321CB 		sub	sp, sp, x1
+ 120 0128 040080D2 		mov	x4, 0
+ 121 012c A3A30091 		add	x3, x29, 40
+ 122 0130 E003132A 		mov	w0, w19
+ 123 0134 E1030091 		mov	x1, sp
+ 124 0138 00000094 		bl	sdReadFile
+ 125 013c 1F1C0072 		tst	w0, 255
+ 126 0140 C0010054 		beq	.L15
+ 127 0144 E0030091 		mov	x0, sp
+ 128 0148 00003FD6 		blr	x0
+ 129 014c 02000090 		adrp	x2, .LC16
+ 130 0150 E103002A 		mov	w1, w0
+ 131 0154 40000091 		add	x0, x2, :lo12:.LC16
+ 132 0158 00000094 		bl	printf
+ 133              	.L16:
+ 134 015c E003132A 		mov	w0, w19
+ 135 0160 00000094 		bl	sdCloseHandle
+ 136 0164 9F020091 		mov	sp, x20
+ 137 0168 BF030091 		mov	sp, x29
+ 138 016c F35341A9 		ldp	x19, x20, [sp, 16]
+ 139 0170 FD7BC3A8 		ldp	x29, x30, [sp], 48
+ 140 0174 C0035FD6 		ret
+ 141              		.p2align 2
+ 142              	.L15:
+ 143 0178 00000090 		adrp	x0, .LC17
+ 144 017c 00000091 		add	x0, x0, :lo12:.LC17
+ 145 0180 00000094 		bl	printf
+ 146 0184 F6FFFF17 		b	.L16
+ 147              		.size	executeSimpleApp, .-executeSimpleApp
+ 148              		.align	2
+ 149 0188 1F2003D5 		.p2align 4,,15
+ 149      1F2003D5 
+ 150              		.global	GetBinary
+ 151              		.type	GetBinary, %function
+ 152              	GetBinary:
+ 153 0190 FD7BB9A9 		stp	x29, x30, [sp, -112]!
+ 154 0194 06008052 		mov	w6, 0
+ 155 0198 05108052 		mov	w5, 128
+ 156 019c FD030091 		mov	x29, sp
+ 157 01a0 F35301A9 		stp	x19, x20, [sp, 16]
+ 158 01a4 64008052 		mov	w4, 3
+ 159 01a8 03008052 		mov	w3, 0
+ 160 01ac F55B02A9 		stp	x21, x22, [sp, 32]
+ 161 01b0 02008052 		mov	w2, 0
+ 162 01b4 F30300AA 		mov	x19, x0
+ 163 01b8 F76303A9 		stp	x23, x24, [sp, 48]
+ 164 01bc 0100B052 		mov	w1, -2147483648
+ 165 01c0 F96B04A9 		stp	x25, x26, [sp, 64]
+ 166 01c4 FB7305A9 		stp	x27, x28, [sp, 80]
+ 167 01c8 00000094 		bl	sdCreateFile
+ 168 01cc F703002A 		mov	w23, w0
+ 169 01d0 E10313AA 		mov	x1, x19
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 4
 
 
- 171 023c 75060091 		add	x21, x19, 1
- 172 0240 D4010034 		cbz	w20, .L22
- 173 0244 416B7338 		ldrb	w1, [x26, x19]
- 174 0248 94060011 		add	w20, w20, 1
- 175 024c 00000094 		bl	printf
- 176 0250 E0031BAA 		mov	x0, x27
- 177 0254 9F3E0071 		cmp	w20, 15
- 178 0258 09020054 		bls	.L20
- 179 025c 00000094 		bl	printf
- 180 0260 A06B40B9 		ldr	w0, [x29, 104]
- 181 0264 610A0091 		add	x1, x19, 2
- 182 0268 F30315AA 		mov	x19, x21
- 183 026c BF0200EB 		cmp	x21, x0
- 184 0270 C2010054 		bcs	.L18
- 185 0274 F50301AA 		mov	x21, x1
- 186              	.L22:
- 187 0278 E103162A 		mov	w1, w22
- 188 027c E0031CAA 		mov	x0, x28
- 189 0280 00000094 		bl	printf
- 190 0284 D6060011 		add	w22, w22, 1
- 191 0288 416B7338 		ldrb	w1, [x26, x19]
- 192 028c E00319AA 		mov	x0, x25
- 193 0290 34008052 		mov	w20, 1
- 194 0294 00000094 		bl	printf
- 195              	.L20:
- 196 0298 A06B40B9 		ldr	w0, [x29, 104]
- 197 029c F30315AA 		mov	x19, x21
- 198 02a0 1F0015EB 		cmp	x0, x21
- 199 02a4 A8FCFF54 		bhi	.L17
- 200              	.L18:
- 201 02a8 E003172A 		mov	w0, w23
- 202 02ac 00000094 		bl	sdCloseHandle
- 203 02b0 1F030091 		mov	sp, x24
- 204              	.L30:
- 205 02b4 BF030091 		mov	sp, x29
- 206 02b8 F35341A9 		ldp	x19, x20, [sp, 16]
- 207 02bc F55B42A9 		ldp	x21, x22, [sp, 32]
- 208 02c0 F76343A9 		ldp	x23, x24, [sp, 48]
- 209 02c4 F96B44A9 		ldp	x25, x26, [sp, 64]
- 210 02c8 FB7345A9 		ldp	x27, x28, [sp, 80]
- 211 02cc FD7BC7A8 		ldp	x29, x30, [sp], 112
- 212 02d0 C0035FD6 		ret
- 213              		.p2align 2
- 214              	.L16:
- 215 02d4 00000090 		adrp	x0, .LC17
- 216 02d8 00000091 		add	x0, x0, :lo12:.LC17
- 217 02dc 00000094 		bl	printf
- 218 02e0 E003172A 		mov	w0, w23
- 219 02e4 00000094 		bl	sdCloseHandle
- 220 02e8 1F030091 		mov	sp, x24
- 221 02ec F2FFFF17 		b	.L30
- 222              		.size	GetBinary, .-GetBinary
- 223              		.align	2
- 224              		.p2align 4,,15
- 225              		.global	ProcessCommand
- 226              		.type	ProcessCommand, %function
- 227              	ProcessCommand:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 5
+ 170 01d4 00000090 		adrp	x0, .LC18
+ 171 01d8 00000091 		add	x0, x0, :lo12:.LC18
+ 172 01dc 00000094 		bl	printf
+ 173 01e0 37010035 		cbnz	w23, .L37
+ 174 01e4 BF030091 		mov	sp, x29
+ 175 01e8 F35341A9 		ldp	x19, x20, [sp, 16]
+ 176 01ec F55B42A9 		ldp	x21, x22, [sp, 32]
+ 177 01f0 F76343A9 		ldp	x23, x24, [sp, 48]
+ 178 01f4 F96B44A9 		ldp	x25, x26, [sp, 64]
+ 179 01f8 FB7345A9 		ldp	x27, x28, [sp, 80]
+ 180 01fc FD7BC7A8 		ldp	x29, x30, [sp], 112
+ 181 0200 C0035FD6 		ret
+ 182              		.p2align 2
+ 183              	.L37:
+ 184 0204 A1B30191 		add	x1, x29, 108
+ 185 0208 E003172A 		mov	w0, w23
+ 186 020c 00000094 		bl	sdGetFileSize
+ 187 0210 017C4093 		sxtw	x1, w0
+ 188 0214 213C0091 		add	x1, x1, 15
+ 189 0218 F8030091 		mov	x24, sp
+ 190 021c 21EC7C92 		and	x1, x1, -16
+ 191 0220 E203002A 		mov	w2, w0
+ 192 0224 FF6321CB 		sub	sp, sp, x1
+ 193 0228 040080D2 		mov	x4, 0
+ 194 022c A3A30191 		add	x3, x29, 104
+ 195 0230 E003172A 		mov	w0, w23
+ 196 0234 E1030091 		mov	x1, sp
+ 197 0238 FA030091 		mov	x26, sp
+ 198 023c 00000094 		bl	sdReadFile
+ 199 0240 1F1C0072 		tst	w0, 255
+ 200 0244 80060054 		beq	.L24
+ 201 0248 A06B40B9 		ldr	w0, [x29, 104]
+ 202 024c E0040034 		cbz	w0, .L26
+ 203 0250 19000090 		adrp	x25, .LC20
+ 204 0254 39030091 		add	x25, x25, :lo12:.LC20
+ 205 0258 1B000090 		adrp	x27, .LC21
+ 206 025c 7B030091 		add	x27, x27, :lo12:.LC21
+ 207 0260 1C000090 		adrp	x28, .LC19
+ 208 0264 9C030091 		add	x28, x28, :lo12:.LC19
+ 209 0268 16008052 		mov	w22, 0
+ 210 026c 14008052 		mov	w20, 0
+ 211 0270 130080D2 		mov	x19, 0
+ 212 0274 1F2003D5 		.p2align 3
+ 213              	.L25:
+ 214 0278 E00319AA 		mov	x0, x25
+ 215 027c 75060091 		add	x21, x19, 1
+ 216 0280 D4010034 		cbz	w20, .L30
+ 217 0284 416B7338 		ldrb	w1, [x26, x19]
+ 218 0288 94060011 		add	w20, w20, 1
+ 219 028c 00000094 		bl	printf
+ 220 0290 E0031BAA 		mov	x0, x27
+ 221 0294 9F3E0071 		cmp	w20, 15
+ 222 0298 09020054 		bls	.L28
+ 223 029c 00000094 		bl	printf
+ 224 02a0 A06B40B9 		ldr	w0, [x29, 104]
+ 225 02a4 610A0091 		add	x1, x19, 2
+ 226 02a8 F30315AA 		mov	x19, x21
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 5
 
 
- 228 02f0 F353BEA9 		stp	x19, x20, [sp, -32]!
- 229 02f4 13000090 		adrp	x19, .LC22
- 230 02f8 73020091 		add	x19, x19, :lo12:.LC22
- 231 02fc E10313AA 		mov	x1, x19
- 232 0300 FE0B00F9 		str	x30, [sp, 16]
- 233 0304 00000094 		bl	strtok
- 234 0308 01004039 		ldrb	w1, [x0]
- 235 030c 3F900071 		cmp	w1, 36
- 236 0310 A0040054 		beq	.L42
- 237 0314 01000090 		adrp	x1, .LC24
- 238 0318 21000091 		add	x1, x1, :lo12:.LC24
- 239 031c F40300AA 		mov	x20, x0
- 240 0320 00000094 		bl	strcmp
- 241 0324 00020035 		cbnz	w0, .L34
- 242              	.L35:
- 243 0328 E10313AA 		mov	x1, x19
- 244 032c 000080D2 		mov	x0, 0
- 245 0330 00000094 		bl	strtok
- 246 0334 A00580D2 		mov	x0, 45
- 247 0338 00000094 		bl	malloc
- 248 033c F30300AA 		mov	x19, x0
- 249 0340 01000090 		adrp	x1, .LC13
- 250 0344 21000091 		add	x1, x1, :lo12:.LC13
- 251 0348 00000094 		bl	strcpy
- 252 034c E00313AA 		mov	x0, x19
- 253 0350 00000094 		bl	printf
- 254              	.L33:
- 255 0354 00008052 		mov	w0, 0
- 256 0358 FE0B40F9 		ldr	x30, [sp, 16]
- 257 035c F353C2A8 		ldp	x19, x20, [sp], 32
- 258 0360 C0035FD6 		ret
- 259              		.p2align 2
- 260              	.L34:
- 261 0364 01000090 		adrp	x1, .LC25
- 262 0368 21000091 		add	x1, x1, :lo12:.LC25
- 263 036c E00314AA 		mov	x0, x20
- 264 0370 00000094 		bl	strcmp
- 265 0374 A0FDFF34 		cbz	w0, .L35
- 266 0378 01000090 		adrp	x1, .LC26
- 267 037c 21000091 		add	x1, x1, :lo12:.LC26
- 268 0380 E00314AA 		mov	x0, x20
- 269 0384 00000094 		bl	strcmp
- 270 0388 E0010035 		cbnz	w0, .L36
- 271 038c E10313AA 		mov	x1, x19
- 272 0390 000080D2 		mov	x0, 0
- 273 0394 00000094 		bl	strtok
- 274 0398 200200B4 		cbz	x0, .L43
- 275 039c 00000094 		bl	GetBinary
- 276 03a0 EDFFFF17 		b	.L33
- 277              		.p2align 2
- 278              	.L42:
- 279 03a4 01000090 		adrp	x1, .LC23
- 280 03a8 21000091 		add	x1, x1, :lo12:.LC23
- 281 03ac 00000094 		bl	strtok
- 282 03b0 00000094 		bl	executeSimpleApp
- 283 03b4 00008052 		mov	w0, 0
- 284 03b8 FE0B40F9 		ldr	x30, [sp, 16]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 6
+ 227 02ac BF0200EB 		cmp	x21, x0
+ 228 02b0 C2010054 		bcs	.L26
+ 229 02b4 F50301AA 		mov	x21, x1
+ 230              	.L30:
+ 231 02b8 E103162A 		mov	w1, w22
+ 232 02bc E0031CAA 		mov	x0, x28
+ 233 02c0 00000094 		bl	printf
+ 234 02c4 D6060011 		add	w22, w22, 1
+ 235 02c8 416B7338 		ldrb	w1, [x26, x19]
+ 236 02cc E00319AA 		mov	x0, x25
+ 237 02d0 34008052 		mov	w20, 1
+ 238 02d4 00000094 		bl	printf
+ 239              	.L28:
+ 240 02d8 A06B40B9 		ldr	w0, [x29, 104]
+ 241 02dc F30315AA 		mov	x19, x21
+ 242 02e0 1F0015EB 		cmp	x0, x21
+ 243 02e4 A8FCFF54 		bhi	.L25
+ 244              	.L26:
+ 245 02e8 E003172A 		mov	w0, w23
+ 246 02ec 00000094 		bl	sdCloseHandle
+ 247 02f0 1F030091 		mov	sp, x24
+ 248              	.L38:
+ 249 02f4 BF030091 		mov	sp, x29
+ 250 02f8 F35341A9 		ldp	x19, x20, [sp, 16]
+ 251 02fc F55B42A9 		ldp	x21, x22, [sp, 32]
+ 252 0300 F76343A9 		ldp	x23, x24, [sp, 48]
+ 253 0304 F96B44A9 		ldp	x25, x26, [sp, 64]
+ 254 0308 FB7345A9 		ldp	x27, x28, [sp, 80]
+ 255 030c FD7BC7A8 		ldp	x29, x30, [sp], 112
+ 256 0310 C0035FD6 		ret
+ 257              		.p2align 2
+ 258              	.L24:
+ 259 0314 00000090 		adrp	x0, .LC17
+ 260 0318 00000091 		add	x0, x0, :lo12:.LC17
+ 261 031c 00000094 		bl	printf
+ 262 0320 E003172A 		mov	w0, w23
+ 263 0324 00000094 		bl	sdCloseHandle
+ 264 0328 1F030091 		mov	sp, x24
+ 265 032c F2FFFF17 		b	.L38
+ 266              		.size	GetBinary, .-GetBinary
+ 267              		.align	2
+ 268              		.p2align 4,,15
+ 269              		.global	ProcessCommand
+ 270              		.type	ProcessCommand, %function
+ 271              	ProcessCommand:
+ 272 0330 F353BEA9 		stp	x19, x20, [sp, -32]!
+ 273 0334 13000090 		adrp	x19, .LC22
+ 274 0338 73020091 		add	x19, x19, :lo12:.LC22
+ 275 033c E10313AA 		mov	x1, x19
+ 276 0340 FE0B00F9 		str	x30, [sp, 16]
+ 277 0344 00000094 		bl	strtok
+ 278 0348 01004039 		ldrb	w1, [x0]
+ 279 034c 3F900071 		cmp	w1, 36
+ 280 0350 A0040054 		beq	.L50
+ 281 0354 01000090 		adrp	x1, .LC24
+ 282 0358 21000091 		add	x1, x1, :lo12:.LC24
+ 283 035c F40300AA 		mov	x20, x0
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 6
 
 
- 285 03bc F353C2A8 		ldp	x19, x20, [sp], 32
- 286 03c0 C0035FD6 		ret
- 287              		.p2align 2
- 288              	.L36:
- 289 03c4 01000090 		adrp	x1, .LC28
- 290 03c8 00000090 		adrp	x0, .LC29
- 291 03cc 21000091 		add	x1, x1, :lo12:.LC28
- 292 03d0 00000091 		add	x0, x0, :lo12:.LC29
- 293 03d4 00000094 		bl	printf
- 294 03d8 DFFFFF17 		b	.L33
- 295              		.p2align 2
- 296              	.L43:
- 297 03dc 00000090 		adrp	x0, .LC27
- 298 03e0 00000091 		add	x0, x0, :lo12:.LC27
- 299 03e4 00000094 		bl	printf
- 300 03e8 DBFFFF17 		b	.L33
- 301              		.size	ProcessCommand, .-ProcessCommand
- 302              		.align	2
- 303 03ec 1F2003D5 		.p2align 4,,15
- 304              		.global	DisplayDirectory
- 305              		.type	DisplayDirectory, %function
- 306              	DisplayDirectory:
- 307 03f0 FFC309D1 		sub	sp, sp, #624
- 308 03f4 020C80D2 		mov	x2, 96
- 309 03f8 01000090 		adrp	x1, .LANCHOR0
- 310 03fc 21000091 		add	x1, x1, :lo12:.LANCHOR0
- 311 0400 F55B06A9 		stp	x21, x22, [sp, 96]
- 312 0404 F5230291 		add	x21, sp, 136
- 313 0408 16000090 		adrp	x22, .LC31
- 314 040c D6020091 		add	x22, x22, :lo12:.LC31
- 315 0410 F35305A9 		stp	x19, x20, [sp, 80]
- 316 0414 F30300AA 		mov	x19, x0
- 317 0418 E00315AA 		mov	x0, x21
- 318 041c F77B07A9 		stp	x23, x30, [sp, 112]
- 319 0420 00000094 		bl	memcpy
- 320 0424 E1A30391 		add	x1, sp, 232
- 321 0428 E00313AA 		mov	x0, x19
- 322 042c 34E00191 		add	x20, x1, 120
- 323 0430 13000090 		adrp	x19, .LC32
- 324 0434 73020091 		add	x19, x19, :lo12:.LC32
- 325 0438 00000094 		bl	sdFindFirstFile
- 326 043c F703002A 		mov	w23, w0
- 327              		.p2align 3
- 328              	.L45:
- 329 0440 E15741B9 		ldr	w1, [sp, 340]
- 330 0444 E00313AA 		mov	x0, x19
- 331 0448 3F400071 		cmp	w1, 16
- 332 044c E0040054 		beq	.L50
- 333 0450 E9FB80B9 		ldrsw	x9, [sp, 248]
- 334 0454 E8F740B9 		ldr	w8, [sp, 244]
- 335 0458 EBAB4939 		ldrb	w11, [sp, 618]
- 336 045c ECA74939 		ldrb	w12, [sp, 617]
- 337 0460 EDA34939 		ldrb	w13, [sp, 616]
- 338 0464 EE9F4939 		ldrb	w14, [sp, 615]
- 339 0468 EA5F41B9 		ldr	w10, [sp, 348]
- 340 046c EE0300B9 		str	w14, [sp]
- 341 0470 ED0B00B9 		str	w13, [sp, 8]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 7
+ 284 0360 00000094 		bl	strcmp
+ 285 0364 00020035 		cbnz	w0, .L42
+ 286              	.L43:
+ 287 0368 E10313AA 		mov	x1, x19
+ 288 036c 000080D2 		mov	x0, 0
+ 289 0370 00000094 		bl	strtok
+ 290 0374 A00580D2 		mov	x0, 45
+ 291 0378 00000094 		bl	malloc
+ 292 037c F30300AA 		mov	x19, x0
+ 293 0380 01000090 		adrp	x1, .LC14
+ 294 0384 21000091 		add	x1, x1, :lo12:.LC14
+ 295 0388 00000094 		bl	strcpy
+ 296 038c E00313AA 		mov	x0, x19
+ 297 0390 00000094 		bl	printf
+ 298              	.L41:
+ 299 0394 00008052 		mov	w0, 0
+ 300 0398 FE0B40F9 		ldr	x30, [sp, 16]
+ 301 039c F353C2A8 		ldp	x19, x20, [sp], 32
+ 302 03a0 C0035FD6 		ret
+ 303              		.p2align 2
+ 304              	.L42:
+ 305 03a4 01000090 		adrp	x1, .LC25
+ 306 03a8 21000091 		add	x1, x1, :lo12:.LC25
+ 307 03ac E00314AA 		mov	x0, x20
+ 308 03b0 00000094 		bl	strcmp
+ 309 03b4 A0FDFF34 		cbz	w0, .L43
+ 310 03b8 01000090 		adrp	x1, .LC26
+ 311 03bc 21000091 		add	x1, x1, :lo12:.LC26
+ 312 03c0 E00314AA 		mov	x0, x20
+ 313 03c4 00000094 		bl	strcmp
+ 314 03c8 E0010035 		cbnz	w0, .L44
+ 315 03cc E10313AA 		mov	x1, x19
+ 316 03d0 000080D2 		mov	x0, 0
+ 317 03d4 00000094 		bl	strtok
+ 318 03d8 200200B4 		cbz	x0, .L51
+ 319 03dc 00000094 		bl	GetBinary
+ 320 03e0 EDFFFF17 		b	.L41
+ 321              		.p2align 2
+ 322              	.L50:
+ 323 03e4 01000090 		adrp	x1, .LC23
+ 324 03e8 21000091 		add	x1, x1, :lo12:.LC23
+ 325 03ec 00000094 		bl	strtok
+ 326 03f0 00000094 		bl	executeSimpleApp
+ 327 03f4 00008052 		mov	w0, 0
+ 328 03f8 FE0B40F9 		ldr	x30, [sp, 16]
+ 329 03fc F353C2A8 		ldp	x19, x20, [sp], 32
+ 330 0400 C0035FD6 		ret
+ 331              		.p2align 2
+ 332              	.L44:
+ 333 0404 01000090 		adrp	x1, .LC28
+ 334 0408 00000090 		adrp	x0, .LC29
+ 335 040c 21000091 		add	x1, x1, :lo12:.LC28
+ 336 0410 00000091 		add	x0, x0, :lo12:.LC29
+ 337 0414 00000094 		bl	printf
+ 338 0418 DFFFFF17 		b	.L41
+ 339              		.p2align 2
+ 340              	.L51:
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 7
 
 
- 342 0474 EC1300B9 		str	w12, [sp, 16]
- 343 0478 EB1B00B9 		str	w11, [sp, 24]
- 344 047c EA1300F9 		str	x10, [sp, 32]
- 345 0480 E82B00B9 		str	w8, [sp, 40]
- 346 0484 E8FF40B9 		ldr	w8, [sp, 252]
- 347 0488 E1834939 		ldrb	w1, [sp, 608]
- 348 048c E79B4939 		ldrb	w7, [sp, 614]
- 349 0490 08B11D11 		add	w8, w8, 1900
- 350 0494 E6974939 		ldrb	w6, [sp, 613]
- 351 0498 E5934939 		ldrb	w5, [sp, 612]
- 352 049c E48F4939 		ldrb	w4, [sp, 611]
- 353 04a0 E38B4939 		ldrb	w3, [sp, 610]
- 354 04a4 E2874939 		ldrb	w2, [sp, 609]
- 355 04a8 A97A69F8 		ldr	x9, [x21, x9, lsl 3]
- 356 04ac E91B00F9 		str	x9, [sp, 48]
- 357 04b0 E83B00B9 		str	w8, [sp, 56]
- 358 04b4 F42300F9 		str	x20, [sp, 64]
- 359 04b8 00000094 		bl	printf
- 360 04bc E1A30391 		add	x1, sp, 232
- 361 04c0 E003172A 		mov	w0, w23
- 362 04c4 00000094 		bl	sdFindNextFile
- 363 04c8 C0FBFF35 		cbnz	w0, .L45
- 364 04cc E003172A 		mov	w0, w23
- 365 04d0 00000094 		bl	sdFindClose
- 366 04d4 F35345A9 		ldp	x19, x20, [sp, 80]
- 367 04d8 F55B46A9 		ldp	x21, x22, [sp, 96]
- 368 04dc F77B47A9 		ldp	x23, x30, [sp, 112]
- 369 04e0 FFC30991 		add	sp, sp, 624
- 370 04e4 C0035FD6 		ret
- 371              		.p2align 2
- 372              	.L50:
- 373 04e8 E10314AA 		mov	x1, x20
- 374 04ec E00316AA 		mov	x0, x22
- 375 04f0 00000094 		bl	printf
- 376 04f4 E1A30391 		add	x1, sp, 232
- 377 04f8 E003172A 		mov	w0, w23
- 378 04fc 00000094 		bl	sdFindNextFile
- 379 0500 00FAFF35 		cbnz	w0, .L45
- 380 0504 E003172A 		mov	w0, w23
- 381 0508 00000094 		bl	sdFindClose
- 382 050c F35345A9 		ldp	x19, x20, [sp, 80]
- 383 0510 F55B46A9 		ldp	x21, x22, [sp, 96]
- 384 0514 F77B47A9 		ldp	x23, x30, [sp, 112]
- 385 0518 FFC30991 		add	sp, sp, 624
- 386 051c C0035FD6 		ret
- 387              		.size	DisplayDirectory, .-DisplayDirectory
- 388              		.align	2
- 389              		.p2align 4,,15
- 390              		.global	kernel_main
- 391              		.type	kernel_main, %function
- 392              	kernel_main:
- 393 0520 FD7BB8A9 		stp	x29, x30, [sp, -128]!
- 394 0524 02008052 		mov	w2, 0
- 395 0528 01008052 		mov	w1, 0
- 396 052c FD030091 		mov	x29, sp
- 397 0530 F35301A9 		stp	x19, x20, [sp, 16]
- 398 0534 14000090 		adrp	x20, printf
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 8
+ 341 041c 00000090 		adrp	x0, .LC27
+ 342 0420 00000091 		add	x0, x0, :lo12:.LC27
+ 343 0424 00000094 		bl	printf
+ 344 0428 DBFFFF17 		b	.L41
+ 345              		.size	ProcessCommand, .-ProcessCommand
+ 346              		.align	2
+ 347 042c 1F2003D5 		.p2align 4,,15
+ 348              		.global	DisplayDirectory
+ 349              		.type	DisplayDirectory, %function
+ 350              	DisplayDirectory:
+ 351 0430 FFC309D1 		sub	sp, sp, #624
+ 352 0434 020C80D2 		mov	x2, 96
+ 353 0438 01000090 		adrp	x1, .LANCHOR0
+ 354 043c 21000091 		add	x1, x1, :lo12:.LANCHOR0
+ 355 0440 F55B06A9 		stp	x21, x22, [sp, 96]
+ 356 0444 F5230291 		add	x21, sp, 136
+ 357 0448 16000090 		adrp	x22, .LC31
+ 358 044c D6020091 		add	x22, x22, :lo12:.LC31
+ 359 0450 F35305A9 		stp	x19, x20, [sp, 80]
+ 360 0454 F30300AA 		mov	x19, x0
+ 361 0458 E00315AA 		mov	x0, x21
+ 362 045c F77B07A9 		stp	x23, x30, [sp, 112]
+ 363 0460 00000094 		bl	memcpy
+ 364 0464 E1A30391 		add	x1, sp, 232
+ 365 0468 E00313AA 		mov	x0, x19
+ 366 046c 34E00191 		add	x20, x1, 120
+ 367 0470 13000090 		adrp	x19, .LC32
+ 368 0474 73020091 		add	x19, x19, :lo12:.LC32
+ 369 0478 00000094 		bl	sdFindFirstFile
+ 370 047c F703002A 		mov	w23, w0
+ 371              		.p2align 3
+ 372              	.L53:
+ 373 0480 E15741B9 		ldr	w1, [sp, 340]
+ 374 0484 E00313AA 		mov	x0, x19
+ 375 0488 3F400071 		cmp	w1, 16
+ 376 048c E0040054 		beq	.L58
+ 377 0490 E9FB80B9 		ldrsw	x9, [sp, 248]
+ 378 0494 E8F740B9 		ldr	w8, [sp, 244]
+ 379 0498 EBAB4939 		ldrb	w11, [sp, 618]
+ 380 049c ECA74939 		ldrb	w12, [sp, 617]
+ 381 04a0 EDA34939 		ldrb	w13, [sp, 616]
+ 382 04a4 EE9F4939 		ldrb	w14, [sp, 615]
+ 383 04a8 EA5F41B9 		ldr	w10, [sp, 348]
+ 384 04ac EE0300B9 		str	w14, [sp]
+ 385 04b0 ED0B00B9 		str	w13, [sp, 8]
+ 386 04b4 EC1300B9 		str	w12, [sp, 16]
+ 387 04b8 EB1B00B9 		str	w11, [sp, 24]
+ 388 04bc EA1300F9 		str	x10, [sp, 32]
+ 389 04c0 E82B00B9 		str	w8, [sp, 40]
+ 390 04c4 E8FF40B9 		ldr	w8, [sp, 252]
+ 391 04c8 E1834939 		ldrb	w1, [sp, 608]
+ 392 04cc E79B4939 		ldrb	w7, [sp, 614]
+ 393 04d0 08B11D11 		add	w8, w8, 1900
+ 394 04d4 E6974939 		ldrb	w6, [sp, 613]
+ 395 04d8 E5934939 		ldrb	w5, [sp, 612]
+ 396 04dc E48F4939 		ldrb	w4, [sp, 611]
+ 397 04e0 E38B4939 		ldrb	w3, [sp, 610]
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 8
 
 
- 399 0538 94020091 		add	x20, x20, :lo12:printf
- 400 053c E30314AA 		mov	x3, x20
- 401 0540 F55B02A9 		stp	x21, x22, [sp, 32]
- 402 0544 00008052 		mov	w0, 0
- 403 0548 F76303A9 		stp	x23, x24, [sp, 48]
- 404 054c 15000090 		adrp	x21, .LC21
- 405 0550 B5020091 		add	x21, x21, :lo12:.LC21
- 406 0554 F96B04A9 		stp	x25, x26, [sp, 64]
- 407 0558 17000090 		adrp	x23, .LC24
- 408 055c F7020091 		add	x23, x23, :lo12:.LC24
- 409 0560 FB7305A9 		stp	x27, x28, [sp, 80]
- 410 0564 1A000090 		adrp	x26, .LC23
- 411 0568 5A030091 		add	x26, x26, :lo12:.LC23
- 412 056c 00000094 		bl	PiConsole_Init
- 413 0570 18000090 		adrp	x24, .LC13
- 414 0574 18030091 		add	x24, x24, :lo12:.LC13
- 415 0578 E00314AA 		mov	x0, x20
- 416 057c 00000094 		bl	displaySmartStart
- 417 0580 19000090 		adrp	x25, .LC25
- 418 0584 39030091 		add	x25, x25, :lo12:.LC25
- 419 0588 E00315AA 		mov	x0, x21
- 420 058c 00000094 		bl	printf
- 421 0590 1C000090 		adrp	x28, .LC26
- 422 0594 9C030091 		add	x28, x28, :lo12:.LC26
- 423 0598 E00314AA 		mov	x0, x20
- 424 059c 00000094 		bl	ARM_setmaxspeed
- 425 05a0 16000090 		adrp	x22, .LC37
- 426 05a4 D6020091 		add	x22, x22, :lo12:.LC37
- 427 05a8 E10314AA 		mov	x1, x20
- 428 05ac 22008052 		mov	w2, 1
- 429 05b0 E00314AA 		mov	x0, x20
- 430 05b4 00000094 		bl	sdInitCard
- 431 05b8 14000090 		adrp	x20, .LC22
- 432 05bc 94020091 		add	x20, x20, :lo12:.LC22
- 433 05c0 E00315AA 		mov	x0, x21
- 434 05c4 00000094 		bl	printf
- 435 05c8 13008052 		mov	w19, 0
- 436 05cc 00000090 		adrp	x0, .LC33
- 437 05d0 00000091 		add	x0, x0, :lo12:.LC33
- 438 05d4 00000094 		bl	DisplayDirectory
- 439 05d8 00000094 		bl	hal_io_video_init
- 440 05dc 00000090 		adrp	x0, .LC34
- 441 05e0 00000091 		add	x0, x0, :lo12:.LC34
- 442 05e4 E2FF9F52 		mov	w2, 65535
- 443 05e8 61008052 		mov	w1, 3
- 444 05ec 00000094 		bl	hal_io_video_puts
- 445 05f0 00000094 		bl	hal_io_serial_init
- 446 05f4 01000090 		adrp	x1, .LC35
- 447 05f8 21000091 		add	x1, x1, :lo12:.LC35
- 448 05fc 00008052 		mov	w0, 0
- 449 0600 00000094 		bl	hal_io_serial_puts
- 450 0604 00000090 		adrp	x0, .LC36
- 451 0608 00000091 		add	x0, x0, :lo12:.LC36
- 452 060c 00000094 		bl	printf
- 453 0610 00000090 		adrp	x0, .LC27
- 454 0614 00000091 		add	x0, x0, :lo12:.LC27
- 455 0618 A03B00F9 		str	x0, [x29, 112]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 9
+ 398 04e4 E2874939 		ldrb	w2, [sp, 609]
+ 399 04e8 A97A69F8 		ldr	x9, [x21, x9, lsl 3]
+ 400 04ec E91B00F9 		str	x9, [sp, 48]
+ 401 04f0 E83B00B9 		str	w8, [sp, 56]
+ 402 04f4 F42300F9 		str	x20, [sp, 64]
+ 403 04f8 00000094 		bl	printf
+ 404 04fc E1A30391 		add	x1, sp, 232
+ 405 0500 E003172A 		mov	w0, w23
+ 406 0504 00000094 		bl	sdFindNextFile
+ 407 0508 C0FBFF35 		cbnz	w0, .L53
+ 408 050c E003172A 		mov	w0, w23
+ 409 0510 00000094 		bl	sdFindClose
+ 410 0514 F35345A9 		ldp	x19, x20, [sp, 80]
+ 411 0518 F55B46A9 		ldp	x21, x22, [sp, 96]
+ 412 051c F77B47A9 		ldp	x23, x30, [sp, 112]
+ 413 0520 FFC30991 		add	sp, sp, 624
+ 414 0524 C0035FD6 		ret
+ 415              		.p2align 2
+ 416              	.L58:
+ 417 0528 E10314AA 		mov	x1, x20
+ 418 052c E00316AA 		mov	x0, x22
+ 419 0530 00000094 		bl	printf
+ 420 0534 E1A30391 		add	x1, sp, 232
+ 421 0538 E003172A 		mov	w0, w23
+ 422 053c 00000094 		bl	sdFindNextFile
+ 423 0540 00FAFF35 		cbnz	w0, .L53
+ 424 0544 E003172A 		mov	w0, w23
+ 425 0548 00000094 		bl	sdFindClose
+ 426 054c F35345A9 		ldp	x19, x20, [sp, 80]
+ 427 0550 F55B46A9 		ldp	x21, x22, [sp, 96]
+ 428 0554 F77B47A9 		ldp	x23, x30, [sp, 112]
+ 429 0558 FFC30991 		add	sp, sp, 624
+ 430 055c C0035FD6 		ret
+ 431              		.size	DisplayDirectory, .-DisplayDirectory
+ 432              		.align	2
+ 433              		.p2align 4,,15
+ 434              		.global	kernel_main
+ 435              		.type	kernel_main, %function
+ 436              	kernel_main:
+ 437 0560 FD7BB8A9 		stp	x29, x30, [sp, -128]!
+ 438 0564 02008052 		mov	w2, 0
+ 439 0568 01008052 		mov	w1, 0
+ 440 056c FD030091 		mov	x29, sp
+ 441 0570 F35301A9 		stp	x19, x20, [sp, 16]
+ 442 0574 14000090 		adrp	x20, printf
+ 443 0578 94020091 		add	x20, x20, :lo12:printf
+ 444 057c E30314AA 		mov	x3, x20
+ 445 0580 F55B02A9 		stp	x21, x22, [sp, 32]
+ 446 0584 00008052 		mov	w0, 0
+ 447 0588 F76303A9 		stp	x23, x24, [sp, 48]
+ 448 058c 15000090 		adrp	x21, .LC21
+ 449 0590 B5020091 		add	x21, x21, :lo12:.LC21
+ 450 0594 F96B04A9 		stp	x25, x26, [sp, 64]
+ 451 0598 17000090 		adrp	x23, .LC24
+ 452 059c F7020091 		add	x23, x23, :lo12:.LC24
+ 453 05a0 FB7305A9 		stp	x27, x28, [sp, 80]
+ 454 05a4 1A000090 		adrp	x26, .LC23
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 9
 
 
- 456 061c 00000090 		adrp	x0, .LC28
- 457 0620 00000091 		add	x0, x0, :lo12:.LC28
- 458 0624 04000090 		adrp	x4, command_buffer
- 459 0628 9B000091 		add	x27, x4, :lo12:command_buffer
- 460 062c A03700F9 		str	x0, [x29, 104]
- 461 0630 00000090 		adrp	x0, .LC29
- 462 0634 00000091 		add	x0, x0, :lo12:.LC29
- 463 0638 A03300F9 		str	x0, [x29, 96]
- 464 063c 00000090 		adrp	x0, .LC38
- 465 0640 00000091 		add	x0, x0, :lo12:.LC38
- 466 0644 A03F00F9 		str	x0, [x29, 120]
- 467              	.L62:
- 468 0648 00008052 		mov	w0, 0
- 469 064c 00000094 		bl	hal_io_serial_getc
- 470 0650 151C0012 		and	w21, w0, 255
- 471 0654 00008052 		mov	w0, 0
- 472 0658 E103152A 		mov	w1, w21
- 473 065c 00000094 		bl	hal_io_serial_putc
- 474 0660 BF2A0071 		cmp	w21, 10
- 475 0664 A41A4D7A 		ccmp	w21, 13, 4, ne
- 476 0668 41070054 		bne	.L53
- 477 066c F3FEFF34 		cbz	w19, .L62
- 478 0670 631E4092 		and	x3, x19, 255
- 479 0674 F5030091 		mov	x21, sp
- 480 0678 603C0091 		add	x0, x3, 15
- 481 067c 010080D2 		mov	x1, 0
- 482 0680 00107C92 		and	x0, x0, 496
- 483 0684 FF6320CB 		sub	sp, sp, x0
- 484 0688 E0030091 		mov	x0, sp
- 485 068c 1F2003D5 		.p2align 3
- 486              	.L55:
- 487 0690 626B6138 		ldrb	w2, [x27, x1]
- 488 0694 02682138 		strb	w2, [x0, x1]
- 489 0698 21040091 		add	x1, x1, 1
- 490 069c 7F0001EB 		cmp	x3, x1
- 491 06a0 81FFFF54 		bne	.L55
- 492 06a4 1FC83338 		strb	wzr, [x0, w19, sxtw]
- 493 06a8 E10314AA 		mov	x1, x20
- 494 06ac 00000094 		bl	strtok
- 495 06b0 01004039 		ldrb	w1, [x0]
- 496 06b4 F30300AA 		mov	x19, x0
- 497 06b8 3F900071 		cmp	w1, 36
- 498 06bc E0020054 		beq	.L74
- 499 06c0 E10317AA 		mov	x1, x23
- 500 06c4 00000094 		bl	strcmp
- 501 06c8 A0000034 		cbz	w0, .L59
- 502 06cc E10319AA 		mov	x1, x25
- 503 06d0 E00313AA 		mov	x0, x19
- 504 06d4 00000094 		bl	strcmp
- 505 06d8 80020035 		cbnz	w0, .L75
- 506              	.L59:
- 507 06dc E10314AA 		mov	x1, x20
- 508 06e0 000080D2 		mov	x0, 0
- 509 06e4 00000094 		bl	strtok
- 510 06e8 A00580D2 		mov	x0, 45
- 511 06ec 00000094 		bl	malloc
- 512 06f0 F30300AA 		mov	x19, x0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 10
+ 455 05a8 5A030091 		add	x26, x26, :lo12:.LC23
+ 456 05ac 00000094 		bl	PiConsole_Init
+ 457 05b0 18000090 		adrp	x24, .LC14
+ 458 05b4 18030091 		add	x24, x24, :lo12:.LC14
+ 459 05b8 E00314AA 		mov	x0, x20
+ 460 05bc 00000094 		bl	displaySmartStart
+ 461 05c0 19000090 		adrp	x25, .LC25
+ 462 05c4 39030091 		add	x25, x25, :lo12:.LC25
+ 463 05c8 E00315AA 		mov	x0, x21
+ 464 05cc 00000094 		bl	printf
+ 465 05d0 1C000090 		adrp	x28, .LC26
+ 466 05d4 9C030091 		add	x28, x28, :lo12:.LC26
+ 467 05d8 E00314AA 		mov	x0, x20
+ 468 05dc 00000094 		bl	ARM_setmaxspeed
+ 469 05e0 16000090 		adrp	x22, .LC37
+ 470 05e4 D6020091 		add	x22, x22, :lo12:.LC37
+ 471 05e8 E10314AA 		mov	x1, x20
+ 472 05ec 22008052 		mov	w2, 1
+ 473 05f0 E00314AA 		mov	x0, x20
+ 474 05f4 00000094 		bl	sdInitCard
+ 475 05f8 14000090 		adrp	x20, .LC22
+ 476 05fc 94020091 		add	x20, x20, :lo12:.LC22
+ 477 0600 E00315AA 		mov	x0, x21
+ 478 0604 00000094 		bl	printf
+ 479 0608 13008052 		mov	w19, 0
+ 480 060c 00000090 		adrp	x0, .LC33
+ 481 0610 00000091 		add	x0, x0, :lo12:.LC33
+ 482 0614 00000094 		bl	DisplayDirectory
+ 483 0618 00000094 		bl	hal_io_video_init
+ 484 061c 00000090 		adrp	x0, .LC34
+ 485 0620 00000091 		add	x0, x0, :lo12:.LC34
+ 486 0624 E2FF9F52 		mov	w2, 65535
+ 487 0628 61008052 		mov	w1, 3
+ 488 062c 00000094 		bl	hal_io_video_puts
+ 489 0630 00000094 		bl	hal_io_serial_init
+ 490 0634 01000090 		adrp	x1, .LC35
+ 491 0638 21000091 		add	x1, x1, :lo12:.LC35
+ 492 063c 00008052 		mov	w0, 0
+ 493 0640 00000094 		bl	hal_io_serial_puts
+ 494 0644 00000090 		adrp	x0, .LC36
+ 495 0648 00000091 		add	x0, x0, :lo12:.LC36
+ 496 064c 00000094 		bl	printf
+ 497 0650 00000090 		adrp	x0, .LC27
+ 498 0654 00000091 		add	x0, x0, :lo12:.LC27
+ 499 0658 A03F00F9 		str	x0, [x29, 120]
+ 500 065c 00000090 		adrp	x0, .LC28
+ 501 0660 00000091 		add	x0, x0, :lo12:.LC28
+ 502 0664 04000090 		adrp	x4, command_buffer
+ 503 0668 9B000091 		add	x27, x4, :lo12:command_buffer
+ 504 066c A03B00F9 		str	x0, [x29, 112]
+ 505 0670 00000090 		adrp	x0, .LC29
+ 506 0674 00000091 		add	x0, x0, :lo12:.LC29
+ 507 0678 A03300F9 		str	x0, [x29, 96]
+ 508 067c 00000090 		adrp	x0, .LC13
+ 509 0680 00000091 		add	x0, x0, :lo12:.LC13
+ 510 0684 A03700F9 		str	x0, [x29, 104]
+ 511              	.L70:
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 10
 
 
- 513 06f4 E10318AA 		mov	x1, x24
- 514 06f8 00000094 		bl	strcpy
- 515 06fc E00313AA 		mov	x0, x19
- 516 0700 00000094 		bl	printf
- 517              	.L57:
- 518 0704 E00316AA 		mov	x0, x22
- 519 0708 13008052 		mov	w19, 0
- 520 070c 00000094 		bl	printf
- 521 0710 BF020091 		mov	sp, x21
- 522 0714 CDFFFF17 		b	.L62
- 523              	.L74:
- 524 0718 E1031AAA 		mov	x1, x26
- 525 071c 00000094 		bl	strtok
- 526 0720 00000094 		bl	executeSimpleApp
- 527 0724 F8FFFF17 		b	.L57
- 528              	.L75:
- 529 0728 E00313AA 		mov	x0, x19
- 530 072c E1031CAA 		mov	x1, x28
- 531 0730 00000094 		bl	strcmp
- 532 0734 40030035 		cbnz	w0, .L60
- 533 0738 E10314AA 		mov	x1, x20
- 534 073c 000080D2 		mov	x0, 0
- 535 0740 00000094 		bl	strtok
- 536 0744 200300B4 		cbz	x0, .L76
- 537 0748 00000094 		bl	GetBinary
- 538 074c EEFFFF17 		b	.L57
- 539              	.L53:
- 540 0750 A03F40F9 		ldr	x0, [x29, 120]
- 541 0754 E103152A 		mov	w1, w21
- 542 0758 00000094 		bl	printf
- 543 075c 75CB3338 		strb	w21, [x27, w19, sxtw]
- 544 0760 60060011 		add	w0, w19, 1
- 545 0764 131C0012 		and	w19, w0, 255
- 546 0768 7F2E0171 		cmp	w19, 75
- 547 076c E1F6FF54 		bne	.L62
- 548 0770 132494D2 		mov	x19, 41248
- 549 0774 F300A0F2 		movk	x19, 0x7, lsl 16
- 550              		.p2align 3
- 551              	.L63:
- 552 0778 20008052 		mov	w0, 1
- 553 077c 00000094 		bl	set_Activity_LED
- 554 0780 E00313AA 		mov	x0, x19
- 555 0784 00000094 		bl	timer_wait
- 556 0788 00008052 		mov	w0, 0
- 557 078c 00000094 		bl	set_Activity_LED
- 558 0790 E00313AA 		mov	x0, x19
- 559 0794 00000094 		bl	timer_wait
- 560 0798 F8FFFF17 		b	.L63
- 561              	.L60:
- 562 079c A00746A9 		ldp	x0, x1, [x29, 96]
- 563 07a0 00000094 		bl	printf
- 564 07a4 D8FFFF17 		b	.L57
- 565              	.L76:
- 566 07a8 A03B40F9 		ldr	x0, [x29, 112]
- 567 07ac 00000094 		bl	printf
- 568 07b0 D5FFFF17 		b	.L57
- 569              		.size	kernel_main, .-kernel_main
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 11
+ 512 0688 00008052 		mov	w0, 0
+ 513 068c 00000094 		bl	hal_io_serial_getc
+ 514 0690 151C0012 		and	w21, w0, 255
+ 515 0694 00008052 		mov	w0, 0
+ 516 0698 E103152A 		mov	w1, w21
+ 517 069c 00000094 		bl	hal_io_serial_putc
+ 518 06a0 BF2A0071 		cmp	w21, 10
+ 519 06a4 A41A4D7A 		ccmp	w21, 13, 4, ne
+ 520 06a8 41070054 		bne	.L61
+ 521 06ac F3FEFF34 		cbz	w19, .L70
+ 522 06b0 631E4092 		and	x3, x19, 255
+ 523 06b4 F5030091 		mov	x21, sp
+ 524 06b8 603C0091 		add	x0, x3, 15
+ 525 06bc 010080D2 		mov	x1, 0
+ 526 06c0 00107C92 		and	x0, x0, 496
+ 527 06c4 FF6320CB 		sub	sp, sp, x0
+ 528 06c8 E0030091 		mov	x0, sp
+ 529 06cc 1F2003D5 		.p2align 3
+ 530              	.L63:
+ 531 06d0 626B6138 		ldrb	w2, [x27, x1]
+ 532 06d4 02682138 		strb	w2, [x0, x1]
+ 533 06d8 21040091 		add	x1, x1, 1
+ 534 06dc 7F0001EB 		cmp	x3, x1
+ 535 06e0 81FFFF54 		bne	.L63
+ 536 06e4 1FC83338 		strb	wzr, [x0, w19, sxtw]
+ 537 06e8 E10314AA 		mov	x1, x20
+ 538 06ec 00000094 		bl	strtok
+ 539 06f0 01004039 		ldrb	w1, [x0]
+ 540 06f4 F30300AA 		mov	x19, x0
+ 541 06f8 3F900071 		cmp	w1, 36
+ 542 06fc E0020054 		beq	.L82
+ 543 0700 E10317AA 		mov	x1, x23
+ 544 0704 00000094 		bl	strcmp
+ 545 0708 A0000034 		cbz	w0, .L67
+ 546 070c E10319AA 		mov	x1, x25
+ 547 0710 E00313AA 		mov	x0, x19
+ 548 0714 00000094 		bl	strcmp
+ 549 0718 80020035 		cbnz	w0, .L83
+ 550              	.L67:
+ 551 071c E10314AA 		mov	x1, x20
+ 552 0720 000080D2 		mov	x0, 0
+ 553 0724 00000094 		bl	strtok
+ 554 0728 A00580D2 		mov	x0, 45
+ 555 072c 00000094 		bl	malloc
+ 556 0730 F30300AA 		mov	x19, x0
+ 557 0734 E10318AA 		mov	x1, x24
+ 558 0738 00000094 		bl	strcpy
+ 559 073c E00313AA 		mov	x0, x19
+ 560 0740 00000094 		bl	printf
+ 561              	.L65:
+ 562 0744 E00316AA 		mov	x0, x22
+ 563 0748 13008052 		mov	w19, 0
+ 564 074c 00000094 		bl	printf
+ 565 0750 BF020091 		mov	sp, x21
+ 566 0754 CDFFFF17 		b	.L70
+ 567              	.L82:
+ 568 0758 E1031AAA 		mov	x1, x26
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 11
 
 
- 570              		.align	2
- 571 07b4 1F2003D5 		.p2align 4,,15
- 571      1F2003D5 
- 571      1F2003D5 
- 572              		.global	loader
- 573              		.type	loader, %function
- 574              	loader:
- 575 07c0 C0035FD6 		ret
- 576              		.size	loader, .-loader
- 577              		.global	directory_index
- 578              		.comm	working_directory,500,8
- 579              		.comm	command_buffer,500,8
- 580              		.section	.rodata
- 581              		.align	3
- 582              		.set	.LANCHOR0,. + 0
- 583              	.LC30:
- 584 0000 00000000 		.xword	.LC0
- 584      00000000 
- 585 0008 00000000 		.xword	.LC1
- 585      00000000 
- 586 0010 00000000 		.xword	.LC2
- 586      00000000 
- 587 0018 00000000 		.xword	.LC3
- 587      00000000 
- 588 0020 00000000 		.xword	.LC4
- 588      00000000 
- 589 0028 00000000 		.xword	.LC5
- 589      00000000 
- 590 0030 00000000 		.xword	.LC6
- 590      00000000 
- 591 0038 00000000 		.xword	.LC7
- 591      00000000 
- 592 0040 00000000 		.xword	.LC8
- 592      00000000 
- 593 0048 00000000 		.xword	.LC9
- 593      00000000 
- 594 0050 00000000 		.xword	.LC10
- 594      00000000 
- 595 0058 00000000 		.xword	.LC11
- 595      00000000 
- 596              		.bss
- 597              		.type	directory_index, %object
- 598              		.size	directory_index, 1
- 599              	directory_index:
- 600 0000 00       		.zero	1
- 601              		.section	.rodata.str1.8,"aMS",@progbits,1
- 602              		.align	3
- 603              	.LC13:
- 604 0000 74686973 		.string	"this is a directory"
- 604      20697320 
- 604      61206469 
- 604      72656374 
- 604      6F727900 
- 605 0014 00000000 		.zero	4
- 606              	.LC14:
- 607 0018 45786563 		.string	"Executing %s\n"
- 607      7574696E 
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 12
+ 569 075c 00000094 		bl	strtok
+ 570 0760 00000094 		bl	executeSimpleApp
+ 571 0764 F8FFFF17 		b	.L65
+ 572              	.L83:
+ 573 0768 E00313AA 		mov	x0, x19
+ 574 076c E1031CAA 		mov	x1, x28
+ 575 0770 00000094 		bl	strcmp
+ 576 0774 40030035 		cbnz	w0, .L68
+ 577 0778 E10314AA 		mov	x1, x20
+ 578 077c 000080D2 		mov	x0, 0
+ 579 0780 00000094 		bl	strtok
+ 580 0784 400300B4 		cbz	x0, .L84
+ 581 0788 00000094 		bl	GetBinary
+ 582 078c EEFFFF17 		b	.L65
+ 583              	.L61:
+ 584 0790 A03740F9 		ldr	x0, [x29, 104]
+ 585 0794 E103152A 		mov	w1, w21
+ 586 0798 00000094 		bl	printf
+ 587 079c 75CB3338 		strb	w21, [x27, w19, sxtw]
+ 588 07a0 60060011 		add	w0, w19, 1
+ 589 07a4 131C0012 		and	w19, w0, 255
+ 590 07a8 7F2E0171 		cmp	w19, 75
+ 591 07ac E1F6FF54 		bne	.L70
+ 592 07b0 132494D2 		mov	x19, 41248
+ 593 07b4 F300A0F2 		movk	x19, 0x7, lsl 16
+ 594              		.p2align 3
+ 595              	.L71:
+ 596 07b8 20008052 		mov	w0, 1
+ 597 07bc 00000094 		bl	set_Activity_LED
+ 598 07c0 E00313AA 		mov	x0, x19
+ 599 07c4 00000094 		bl	timer_wait
+ 600 07c8 00008052 		mov	w0, 0
+ 601 07cc 00000094 		bl	set_Activity_LED
+ 602 07d0 E00313AA 		mov	x0, x19
+ 603 07d4 00000094 		bl	timer_wait
+ 604 07d8 F8FFFF17 		b	.L71
+ 605              	.L68:
+ 606 07dc A03340F9 		ldr	x0, [x29, 96]
+ 607 07e0 A13B40F9 		ldr	x1, [x29, 112]
+ 608 07e4 00000094 		bl	printf
+ 609 07e8 D7FFFF17 		b	.L65
+ 610              	.L84:
+ 611 07ec A03F40F9 		ldr	x0, [x29, 120]
+ 612 07f0 00000094 		bl	printf
+ 613 07f4 D4FFFF17 		b	.L65
+ 614              		.size	kernel_main, .-kernel_main
+ 615              		.align	2
+ 616 07f8 1F2003D5 		.p2align 4,,15
+ 616      1F2003D5 
+ 617              		.global	loader
+ 618              		.type	loader, %function
+ 619              	loader:
+ 620 0800 C0035FD6 		ret
+ 621              		.size	loader, .-loader
+ 622              		.global	directory_index
+ 623              		.comm	working_directory,500,8
+ 624              		.comm	command_buffer,500,8
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 12
 
 
- 607      67202573 
- 607      0A00
- 608 0026 0000     		.zero	2
- 609              	.LC15:
- 610 0028 6563686F 		.string	"echo.bin"
- 610      2E62696E 
- 610      00
- 611 0031 00000000 		.zero	7
- 611      000000
- 612              	.LC16:
- 613 0038 70726F63 		.string	"process executed with status code %d"
- 613      65737320 
- 613      65786563 
- 613      75746564 
- 613      20776974 
- 614 005d 000000   		.zero	3
- 615              	.LC17:
- 616 0060 4661696C 		.string	"Failed to read"
- 616      65642074 
- 616      6F207265 
- 616      616400
- 617 006f 00       		.zero	1
- 618              	.LC18:
- 619 0070 47657474 		.string	"Getting binary for %s\n"
- 619      696E6720 
- 619      62696E61 
- 619      72792066 
- 619      6F722025 
- 620 0087 00       		.zero	1
- 621              	.LC19:
- 622 0088 25303778 		.string	"%07x0  "
- 622      30202000 
- 623              	.LC20:
- 624 0090 25303278 		.string	"%02x "
- 624      2000
- 625 0096 0000     		.zero	2
- 626              	.LC21:
- 627 0098 0A00     		.string	"\n"
- 628 009a 00000000 		.zero	6
- 628      0000
- 629              	.LC22:
- 630 00a0 2000     		.string	" "
- 631 00a2 00000000 		.zero	6
- 631      0000
- 632              	.LC23:
- 633 00a8 2400     		.string	"$"
- 634 00aa 00000000 		.zero	6
- 634      0000
- 635              	.LC24:
- 636 00b0 6C7300   		.string	"ls"
- 637 00b3 00000000 		.zero	5
- 637      00
- 638              	.LC25:
- 639 00b8 4C5300   		.string	"LS"
- 640 00bb 00000000 		.zero	5
- 640      00
- 641              	.LC26:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 13
+ 625              		.section	.rodata
+ 626              		.align	3
+ 627              		.set	.LANCHOR0,. + 0
+ 628              	.LC30:
+ 629 0000 00000000 		.xword	.LC0
+ 629      00000000 
+ 630 0008 00000000 		.xword	.LC1
+ 630      00000000 
+ 631 0010 00000000 		.xword	.LC2
+ 631      00000000 
+ 632 0018 00000000 		.xword	.LC3
+ 632      00000000 
+ 633 0020 00000000 		.xword	.LC4
+ 633      00000000 
+ 634 0028 00000000 		.xword	.LC5
+ 634      00000000 
+ 635 0030 00000000 		.xword	.LC6
+ 635      00000000 
+ 636 0038 00000000 		.xword	.LC7
+ 636      00000000 
+ 637 0040 00000000 		.xword	.LC8
+ 637      00000000 
+ 638 0048 00000000 		.xword	.LC9
+ 638      00000000 
+ 639 0050 00000000 		.xword	.LC10
+ 639      00000000 
+ 640 0058 00000000 		.xword	.LC11
+ 640      00000000 
+ 641              		.bss
+ 642              		.type	directory_index, %object
+ 643              		.size	directory_index, 1
+ 644              	directory_index:
+ 645 0000 00       		.zero	1
+ 646              		.section	.rodata.str1.8,"aMS",@progbits,1
+ 647              		.align	3
+ 648              	.LC13:
+ 649 0000 256300   		.string	"%c"
+ 650 0003 00000000 		.zero	5
+ 650      00
+ 651              	.LC14:
+ 652 0008 74686973 		.string	"this is a directory"
+ 652      20697320 
+ 652      61206469 
+ 652      72656374 
+ 652      6F727900 
+ 653 001c 00000000 		.zero	4
+ 654              	.LC15:
+ 655 0020 0A457865 		.string	"\nExecuting %s\n"
+ 655      63757469 
+ 655      6E672025 
+ 655      730A00
+ 656 002f 00       		.zero	1
+ 657              	.LC16:
+ 658 0030 70726F63 		.string	"process executed with status code %d"
+ 658      65737320 
+ 658      65786563 
+ 658      75746564 
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 13
 
 
- 642 00c0 64756D70 		.string	"dump"
- 642      00
- 643 00c5 000000   		.zero	3
- 644              	.LC27:
- 645 00c8 506C6561 		.string	"Please enter the name of a binary file"
- 645      73652065 
- 645      6E746572 
- 645      20746865 
- 645      206E616D 
- 646 00ef 00       		.zero	1
- 647              	.LC28:
- 648 00f0 436F6D6D 		.string	"Command not recognized"
- 648      616E6420 
- 648      6E6F7420 
- 648      7265636F 
- 648      676E697A 
- 649 0107 00       		.zero	1
- 650              	.LC29:
- 651 0108 0A257300 		.string	"\n%s"
- 652 010c 00000000 		.zero	4
- 653              	.LC31:
- 654 0110 2573203C 		.string	"%s <DIR>\n"
- 654      4449523E 
- 654      0A00
- 655 011a 00000000 		.zero	6
- 655      0000
- 656              	.LC32:
- 657 0120 25632563 		.string	"%c%c%c%c%c%c%c%c.%c%c%c Size: %9lu bytes, %2d/%s/%4d, LFN: %s\n"
- 657      25632563 
- 657      25632563 
- 657      25632563 
- 657      2E256325 
- 658 015f 00       		.zero	1
- 659              	.LC33:
- 660 0160 5C2A2E2A 		.string	"\\*.*"
- 660      00
- 661 0165 000000   		.zero	3
- 662              	.LC34:
- 663 0168 48454C4C 		.string	"HELLO THERE "
- 663      4F205448 
- 663      45524520 
- 663      00
- 664 0175 000000   		.zero	3
- 665              	.LC35:
- 666 0178 54797065 		.string	"Typewriter:"
- 666      77726974 
- 666      65723A00 
- 667 0184 00000000 		.zero	4
- 668              	.LC36:
- 669 0188 2300     		.string	"#"
- 670 018a 00000000 		.zero	6
- 670      0000
- 671              	.LC37:
- 672 0190 0D0A2300 		.string	"\r\n#"
- 673 0194 00000000 		.zero	4
- 674              	.LC38:
- 675 0198 256300   		.string	"%c"
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 14
+ 658      20776974 
+ 659 0055 000000   		.zero	3
+ 660              	.LC17:
+ 661 0058 4661696C 		.string	"Failed to read"
+ 661      65642074 
+ 661      6F207265 
+ 661      616400
+ 662 0067 00       		.zero	1
+ 663              	.LC18:
+ 664 0068 47657474 		.string	"Getting binary for %s\n"
+ 664      696E6720 
+ 664      62696E61 
+ 664      72792066 
+ 664      6F722025 
+ 665 007f 00       		.zero	1
+ 666              	.LC19:
+ 667 0080 25303778 		.string	"%07x0  "
+ 667      30202000 
+ 668              	.LC20:
+ 669 0088 25303278 		.string	"%02x "
+ 669      2000
+ 670 008e 0000     		.zero	2
+ 671              	.LC21:
+ 672 0090 0A00     		.string	"\n"
+ 673 0092 00000000 		.zero	6
+ 673      0000
+ 674              	.LC22:
+ 675 0098 2000     		.string	" "
+ 676 009a 00000000 		.zero	6
+ 676      0000
+ 677              	.LC23:
+ 678 00a0 2400     		.string	"$"
+ 679 00a2 00000000 		.zero	6
+ 679      0000
+ 680              	.LC24:
+ 681 00a8 6C7300   		.string	"ls"
+ 682 00ab 00000000 		.zero	5
+ 682      00
+ 683              	.LC25:
+ 684 00b0 4C5300   		.string	"LS"
+ 685 00b3 00000000 		.zero	5
+ 685      00
+ 686              	.LC26:
+ 687 00b8 64756D70 		.string	"dump"
+ 687      00
+ 688 00bd 000000   		.zero	3
+ 689              	.LC27:
+ 690 00c0 506C6561 		.string	"Please enter the name of a binary file"
+ 690      73652065 
+ 690      6E746572 
+ 690      20746865 
+ 690      206E616D 
+ 691 00e7 00       		.zero	1
+ 692              	.LC28:
+ 693 00e8 436F6D6D 		.string	"Command not recognized"
+ 693      616E6420 
+ 693      6E6F7420 
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 14
 
 
- 676 019b 00000000 		.zero	5
- 676      00
- 677              	.LC0:
- 678 01a0 4A616E00 		.string	"Jan"
- 679 01a4 00000000 		.zero	4
- 680              	.LC1:
- 681 01a8 46656200 		.string	"Feb"
- 682 01ac 00000000 		.zero	4
- 683              	.LC2:
- 684 01b0 4D617200 		.string	"Mar"
- 685 01b4 00000000 		.zero	4
- 686              	.LC3:
- 687 01b8 41707200 		.string	"Apr"
- 688 01bc 00000000 		.zero	4
- 689              	.LC4:
- 690 01c0 4D617900 		.string	"May"
- 691 01c4 00000000 		.zero	4
- 692              	.LC5:
- 693 01c8 4A756E00 		.string	"Jun"
- 694 01cc 00000000 		.zero	4
- 695              	.LC6:
- 696 01d0 4A756C00 		.string	"Jul"
- 697 01d4 00000000 		.zero	4
- 698              	.LC7:
- 699 01d8 41756700 		.string	"Aug"
- 700 01dc 00000000 		.zero	4
- 701              	.LC8:
- 702 01e0 53657000 		.string	"Sep"
- 703 01e4 00000000 		.zero	4
- 704              	.LC9:
- 705 01e8 4F637400 		.string	"Oct"
- 706 01ec 00000000 		.zero	4
- 707              	.LC10:
- 708 01f0 4E6F7600 		.string	"Nov"
- 709 01f4 00000000 		.zero	4
- 710              	.LC11:
- 711 01f8 44656300 		.string	"Dec"
- 712              		.ident	"GCC: (GNU Toolchain for the A-profile Architecture 8.2-2019.01 (arm-rel-8.28)) 8.2.1 20180
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 15
+ 693      7265636F 
+ 693      676E697A 
+ 694 00ff 00       		.zero	1
+ 695              	.LC29:
+ 696 0100 0A257300 		.string	"\n%s"
+ 697 0104 00000000 		.zero	4
+ 698              	.LC31:
+ 699 0108 2573203C 		.string	"%s <DIR>\n"
+ 699      4449523E 
+ 699      0A00
+ 700 0112 00000000 		.zero	6
+ 700      0000
+ 701              	.LC32:
+ 702 0118 25632563 		.string	"%c%c%c%c%c%c%c%c.%c%c%c Size: %9lu bytes, %2d/%s/%4d, LFN: %s\n"
+ 702      25632563 
+ 702      25632563 
+ 702      25632563 
+ 702      2E256325 
+ 703 0157 00       		.zero	1
+ 704              	.LC33:
+ 705 0158 5C2A2E2A 		.string	"\\*.*"
+ 705      00
+ 706 015d 000000   		.zero	3
+ 707              	.LC34:
+ 708 0160 48454C4C 		.string	"HELLO THERE "
+ 708      4F205448 
+ 708      45524520 
+ 708      00
+ 709 016d 000000   		.zero	3
+ 710              	.LC35:
+ 711 0170 54797065 		.string	"Typewriter:"
+ 711      77726974 
+ 711      65723A00 
+ 712 017c 00000000 		.zero	4
+ 713              	.LC36:
+ 714 0180 2300     		.string	"#"
+ 715 0182 00000000 		.zero	6
+ 715      0000
+ 716              	.LC37:
+ 717 0188 0D0A2300 		.string	"\r\n#"
+ 718 018c 00000000 		.zero	4
+ 719              	.LC0:
+ 720 0190 4A616E00 		.string	"Jan"
+ 721 0194 00000000 		.zero	4
+ 722              	.LC1:
+ 723 0198 46656200 		.string	"Feb"
+ 724 019c 00000000 		.zero	4
+ 725              	.LC2:
+ 726 01a0 4D617200 		.string	"Mar"
+ 727 01a4 00000000 		.zero	4
+ 728              	.LC3:
+ 729 01a8 41707200 		.string	"Apr"
+ 730 01ac 00000000 		.zero	4
+ 731              	.LC4:
+ 732 01b0 4D617900 		.string	"May"
+ 733 01b4 00000000 		.zero	4
+ 734              	.LC5:
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 15
+
+
+ 735 01b8 4A756E00 		.string	"Jun"
+ 736 01bc 00000000 		.zero	4
+ 737              	.LC6:
+ 738 01c0 4A756C00 		.string	"Jul"
+ 739 01c4 00000000 		.zero	4
+ 740              	.LC7:
+ 741 01c8 41756700 		.string	"Aug"
+ 742 01cc 00000000 		.zero	4
+ 743              	.LC8:
+ 744 01d0 53657000 		.string	"Sep"
+ 745 01d4 00000000 		.zero	4
+ 746              	.LC9:
+ 747 01d8 4F637400 		.string	"Oct"
+ 748 01dc 00000000 		.zero	4
+ 749              	.LC10:
+ 750 01e0 4E6F7600 		.string	"Nov"
+ 751 01e4 00000000 		.zero	4
+ 752              	.LC11:
+ 753 01e8 44656300 		.string	"Dec"
+ 754              		.ident	"GCC: (GNU Toolchain for the A-profile Architecture 8.2-2019.01 (arm-rel-8.28)) 8.2.1 20180
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 16
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 main.c
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4      .text:0000000000000000 $x
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:8      .text:0000000000000000 GetCurrentDirectory
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:24     .text:0000000000000030 executeSimpleApp
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:108    .text:0000000000000150 GetBinary
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:227    .text:00000000000002f0 ProcessCommand
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:306    .text:00000000000003f0 DisplayDirectory
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:392    .text:0000000000000520 kernel_main
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4      .text:0000000000000000 $x
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:8      .text:0000000000000000 handleInterrupt
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:56     .text:0000000000000070 letsTryForScience
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:71     .text:0000000000000080 GetCurrentDirectory
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:87     .text:00000000000000b0 executeSimpleApp
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:152    .text:0000000000000190 GetBinary
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:271    .text:0000000000000330 ProcessCommand
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:350    .text:0000000000000430 DisplayDirectory
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:436    .text:0000000000000560 kernel_main
                             *COM*:00000000000001f4 command_buffer
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:574    .text:00000000000007c0 loader
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:599    .bss:0000000000000000 directory_index
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:619    .text:0000000000000800 loader
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:644    .bss:0000000000000000 directory_index
                             *COM*:00000000000001f4 working_directory
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:581    .rodata:0000000000000000 $d
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:600    .bss:0000000000000000 $d
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:602    .rodata.str1.8:0000000000000000 $d
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:626    .rodata:0000000000000000 $d
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:645    .bss:0000000000000000 $d
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:647    .rodata.str1.8:0000000000000000 $d
 
 UNDEFINED SYMBOLS
+hal_io_serial_getc
+hal_io_serial_putc
+printf
+tryToPassAChar
 malloc
 strcpy
 sdCreateFile
-printf
 sdGetFileSize
 sdReadFile
-strcmp
 sdCloseHandle
 strtok
+strcmp
 memcpy
 sdFindFirstFile
 sdFindNextFile
@@ -861,11 +908,9 @@ hal_io_video_init
 hal_io_video_puts
 hal_io_serial_init
 hal_io_serial_puts
-hal_io_serial_getc
-hal_io_serial_putc
 set_Activity_LED
 timer_wait
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 1
 
 
    1              	# 1 "src/boot/SmartStart64.S"
@@ -925,7 +970,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
   52 0034 210D0058 		ldr x1, =RPi_CpuId						// Address of RPi_CpuId
   53 0038 200000B9 		str w0, [x1]							// Store the CPU id 
   54              	
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 2
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 2
 
 
   55              	//"================================================================"
@@ -985,7 +1030,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  109 00c8 7F111CD5 		msr	hstr_el2, xzr						// Disable coprocessor traps to EL2
  110 00cc 0006A0D2 		mov	x0, #3 << 20
  111 00d0 401018D5 		msr	cpacr_el1, x0						// Enable FP/SIMD at EL1
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 3
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 3
 
 
  112              	
@@ -1045,7 +1090,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  166 0134 1F0003EB 		cmp	x0, x3
  167 0138 82000054 		bcs	.bss_cleared
  168              	.bss_zero_loop:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 4
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 4
 
 
  169 013c 1F4400B8 		str	wzr, [x0], 4
@@ -1105,7 +1150,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  219      00000000 
  220              	
  221              	
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 5
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 5
 
 
  222              	/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++}
@@ -1165,7 +1210,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  274 02e0 051B80D2 		mov x5, #spin_cpu0						// Load address of spins
  275 02e4 A17826F8 		str x1, [x5, x6, lsl #3]				// Save caller address
  276 02e8 9F3F03D5 		dsb sy
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 6
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 6
 
 
  277 02ec 9F2003D5 		sev
@@ -1225,7 +1270,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  330              	c_irq_handler:
  331 000c C0035FD6 		ret
  332              	
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 7
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 7
 
 
  333              	/* Provide weak reference c_irq_identify_and_clear_source so if user does not use it functions as d
@@ -1284,161 +1329,169 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  386 00b8 FD7BC1A8 		ldp	x29, x30, [sp], #16
  387 00bc E0039FD6 		eret
  388              	
- 389              	/* macro to align handlers every 0x80 bytes */
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 8
+ 389              	.globl svc_handler
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 8
 
 
- 390              	.macro	vector handler
- 391              	.balign 0x80
- 392              	b	\handler
- 393              	.endm
- 394              	
- 395 00c0 1F2003D5 	.balign 0x800
- 395      1F2003D5 
- 395      1F2003D5 
- 395      1F2003D5 
- 395      1F2003D5 
- 396              	.globl	VectorTable
- 397              	VectorTable:
- 398              		/* from current EL with sp_el0 */
- 399 0800 00000014 		vector	_start			/* Synchronous */
- 400 0804 1F2003D5 		vector  hang			/* IRQ */
- 400      1F2003D5 
- 400      1F2003D5 
- 400      1F2003D5 
- 400      1F2003D5 
- 401 0884 1F2003D5 		vector	hang			/* FIQ */
- 401      1F2003D5 
- 401      1F2003D5 
- 401      1F2003D5 
- 401      1F2003D5 
- 402 0904 1F2003D5 		vector	hang			/* SErrorStub */
- 402      1F2003D5 
- 402      1F2003D5 
- 402      1F2003D5 
- 402      1F2003D5 
- 403              	
- 404              		/* from current EL with sp_elx, x != 0 */
- 405 0984 1F2003D5 		vector	hang			/* Synchronous */
- 405      1F2003D5 
- 405      1F2003D5 
- 405      1F2003D5 
- 405      1F2003D5 
- 406 0a04 1F2003D5 		vector	irq_handler		/* IRQ */
- 406      1F2003D5 
- 406      1F2003D5 
- 406      1F2003D5 
- 406      1F2003D5 
- 407 0a84 1F2003D5 		vector	hang			/* FIQ */
- 407      1F2003D5 
- 407      1F2003D5 
- 407      1F2003D5 
- 407      1F2003D5 
- 408 0b04 1F2003D5 		vector	hang			/* SErrorStub */
+ 390              	svc_handler:
+ 391 00c0 00000014 		b handleInterrupt
+ 392              	
+ 393              	.globl tryToPassAChar
+ 394              	tryToPassAChar:
+ 395 00c4 ED0300AA 		mov x13, x0
+ 396              	
+ 397              	/* macro to align handlers every 0x80 bytes */
+ 398              	.macro	vector handler
+ 399              	.balign 0x80
+ 400              	b	\handler
+ 401              	.endm
+ 402              	
+ 403 00c8 1F2003D5 	.balign 0x800
+ 403      1F2003D5 
+ 403      1F2003D5 
+ 403      1F2003D5 
+ 403      1F2003D5 
+ 404              	.globl	VectorTable
+ 405              	VectorTable:
+ 406              		/* from current EL with sp_el0 */
+ 407 0800 00000014 		vector	_start			/* Synchronous */
+ 408 0804 1F2003D5 		vector  hang			/* IRQ */
  408      1F2003D5 
  408      1F2003D5 
  408      1F2003D5 
  408      1F2003D5 
- 409              	
- 410              		/* from lower EL, target EL minus 1 is AArch64 */
- 411 0b84 1F2003D5 		vector	hang			/* Synchronous */
- 411      1F2003D5 
- 411      1F2003D5 
- 411      1F2003D5 
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 9
-
-
- 411      1F2003D5 
- 412 0c04 1F2003D5 		vector  hang			/* IRQ */
- 412      1F2003D5 
- 412      1F2003D5 
- 412      1F2003D5 
- 412      1F2003D5 
- 413 0c84 1F2003D5 		vector	hang			/* FIQ */
+ 409 0884 1F2003D5 		vector	hang			/* FIQ */
+ 409      1F2003D5 
+ 409      1F2003D5 
+ 409      1F2003D5 
+ 409      1F2003D5 
+ 410 0904 1F2003D5 		vector	hang			/* SErrorStub */
+ 410      1F2003D5 
+ 410      1F2003D5 
+ 410      1F2003D5 
+ 410      1F2003D5 
+ 411              	
+ 412              		/* from current EL with sp_elx, x != 0 */
+ 413 0984 1F2003D5 		vector	svc_handler		/* Synchronous */
  413      1F2003D5 
  413      1F2003D5 
  413      1F2003D5 
  413      1F2003D5 
- 414 0d04 1F2003D5 		vector	hang			/* SErrorStub */
+ 414 0a04 1F2003D5 		vector	irq_handler		/* IRQ */
  414      1F2003D5 
  414      1F2003D5 
  414      1F2003D5 
  414      1F2003D5 
- 415              	
- 416              		/* from lower EL, target EL minus 1 is AArch32 */
- 417 0d84 1F2003D5 		vector	hang			/* Synchronous */
- 417      1F2003D5 
- 417      1F2003D5 
- 417      1F2003D5 
- 417      1F2003D5 
- 418 0e04 1F2003D5 		vector  hang			/* IRQ */
- 418      1F2003D5 
- 418      1F2003D5 
- 418      1F2003D5 
- 418      1F2003D5 
- 419 0e84 1F2003D5 		vector	hang			/* FIQ */
- 419      1F2003D5 
- 419      1F2003D5 
- 419      1F2003D5 
- 419      1F2003D5 
- 420 0f04 1F2003D5 		vector	hang			/* SErrorStub */
- 420      1F2003D5 
- 420      1F2003D5 
- 420      1F2003D5 
- 420      1F2003D5 
- 421              	
- 422              	/*==========================================================================}
- 423              	;{					  CPU STRING CONSTANT DEFINITIONS					    }
- 424              	;{=========================================================================*/
- 425              	.section ".rodata.cpuid", "a", %progbits
- 426              	.balign	4
- 427 0000 636F7274 	ARM8_STR: .string "cortex-a53\0"
- 427      65782D61 
- 427      35330000 
- 428              	
- 429              	/****************************************************************
- 430              	       	   DATA FOR SMARTSTART64  EXPOSED TO INTERFACE 
- 431              	****************************************************************/
- 432              	.section ".data.smartstart64", "aw"
- 433              	.balign 4
- 434              	
- 435              	.globl RPi_IO_Base_Addr;				// Make sure Pi_IO_Base_Addr label is global
- 436 0000 00000000 	RPi_IO_Base_Addr : .4byte 0;			// Peripheral Base addr is 4 byte variable in 64bit mode
- 437              	
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 10
+ 415 0a84 1F2003D5 		vector	hang			/* FIQ */
+ 415      1F2003D5 
+ 415      1F2003D5 
+ 415      1F2003D5 
+ 415      1F2003D5 
+ 416 0b04 1F2003D5 		vector	hang			/* SErrorStub */
+ 416      1F2003D5 
+ 416      1F2003D5 
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 9
 
 
- 438              	.globl RPi_BootAddr;					// Make sure RPi_BootAddr label is global
- 439 0004 00000000 	RPi_BootAddr : .4byte 0;				// CPU boot address is 4 byte variable in 64bit mode
- 440              	
- 441              	.globl RPi_CoresReady;					// Make sure RPi_CoresReady label is global
- 442 0008 00000000 	RPi_CoresReady : .4byte 0;				// CPU cores ready for use is 4 byte variable in 32bit mode
- 443              	
- 444              	.globl RPi_CPUBootMode;					// Make sure RPi_CPUBootMode label is global
- 445 000c 00000000 	RPi_CPUBootMode : .4byte 0;				// CPU Boot Mode is 4 byte variable in 64bit mode
- 446              	
- 447              	.globl RPi_CpuId;						// Make sure RPi_CpuId label is global
- 448 0010 00000000 	RPi_CpuId : .4byte 0;					// CPU Id is 4 byte variable in 64bit mode
- 449              	
- 450              	.globl RPi_CompileMode;					// Make sure RPi_CompileMode label is global
- 451 0014 00000000 	RPi_CompileMode : .4byte 0;				// Compile mode is 4 byte variable in 64bit mode
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 11
+ 416      1F2003D5 
+ 416      1F2003D5 
+ 417              	
+ 418              		/* from lower EL, target EL minus 1 is AArch64 */
+ 419 0b84 1F2003D5 		vector	hang			/* Synchronous */
+ 419      1F2003D5 
+ 419      1F2003D5 
+ 419      1F2003D5 
+ 419      1F2003D5 
+ 420 0c04 1F2003D5 		vector  hang			/* IRQ */
+ 420      1F2003D5 
+ 420      1F2003D5 
+ 420      1F2003D5 
+ 420      1F2003D5 
+ 421 0c84 1F2003D5 		vector	hang			/* FIQ */
+ 421      1F2003D5 
+ 421      1F2003D5 
+ 421      1F2003D5 
+ 421      1F2003D5 
+ 422 0d04 1F2003D5 		vector	hang			/* SErrorStub */
+ 422      1F2003D5 
+ 422      1F2003D5 
+ 422      1F2003D5 
+ 422      1F2003D5 
+ 423              	
+ 424              		/* from lower EL, target EL minus 1 is AArch32 */
+ 425 0d84 1F2003D5 		vector	hang			/* Synchronous */
+ 425      1F2003D5 
+ 425      1F2003D5 
+ 425      1F2003D5 
+ 425      1F2003D5 
+ 426 0e04 1F2003D5 		vector  hang			/* IRQ */
+ 426      1F2003D5 
+ 426      1F2003D5 
+ 426      1F2003D5 
+ 426      1F2003D5 
+ 427 0e84 1F2003D5 		vector	hang			/* FIQ */
+ 427      1F2003D5 
+ 427      1F2003D5 
+ 427      1F2003D5 
+ 427      1F2003D5 
+ 428 0f04 1F2003D5 		vector	hang			/* SErrorStub */
+ 428      1F2003D5 
+ 428      1F2003D5 
+ 428      1F2003D5 
+ 428      1F2003D5 
+ 429              	
+ 430              	/*==========================================================================}
+ 431              	;{					  CPU STRING CONSTANT DEFINITIONS					    }
+ 432              	;{=========================================================================*/
+ 433              	.section ".rodata.cpuid", "a", %progbits
+ 434              	.balign	4
+ 435 0000 636F7274 	ARM8_STR: .string "cortex-a53\0"
+ 435      65782D61 
+ 435      35330000 
+ 436              	
+ 437              	/****************************************************************
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 10
+
+
+ 438              	       	   DATA FOR SMARTSTART64  EXPOSED TO INTERFACE 
+ 439              	****************************************************************/
+ 440              	.section ".data.smartstart64", "aw"
+ 441              	.balign 4
+ 442              	
+ 443              	.globl RPi_IO_Base_Addr;				// Make sure Pi_IO_Base_Addr label is global
+ 444 0000 00000000 	RPi_IO_Base_Addr : .4byte 0;			// Peripheral Base addr is 4 byte variable in 64bit mode
+ 445              	
+ 446              	.globl RPi_BootAddr;					// Make sure RPi_BootAddr label is global
+ 447 0004 00000000 	RPi_BootAddr : .4byte 0;				// CPU boot address is 4 byte variable in 64bit mode
+ 448              	
+ 449              	.globl RPi_CoresReady;					// Make sure RPi_CoresReady label is global
+ 450 0008 00000000 	RPi_CoresReady : .4byte 0;				// CPU cores ready for use is 4 byte variable in 32bit mode
+ 451              	
+ 452              	.globl RPi_CPUBootMode;					// Make sure RPi_CPUBootMode label is global
+ 453 000c 00000000 	RPi_CPUBootMode : .4byte 0;				// CPU Boot Mode is 4 byte variable in 64bit mode
+ 454              	
+ 455              	.globl RPi_CpuId;						// Make sure RPi_CpuId label is global
+ 456 0010 00000000 	RPi_CpuId : .4byte 0;					// CPU Id is 4 byte variable in 64bit mode
+ 457              	
+ 458              	.globl RPi_CompileMode;					// Make sure RPi_CompileMode label is global
+ 459 0014 00000000 	RPi_CompileMode : .4byte 0;				// Compile mode is 4 byte variable in 64bit mode
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 11
 
 
 DEFINED SYMBOLS
 src/boot/SmartStart64.S:32     .text.startup:0000000000000000 $x
 src/boot/SmartStart64.S:34     .text.startup:0000000000000000 _start
-src/boot/SmartStart64.S:439    .data.smartstart64:0000000000000004 RPi_BootAddr
-src/boot/SmartStart64.S:436    .data.smartstart64:0000000000000000 RPi_IO_Base_Addr
-src/boot/SmartStart64.S:442    .data.smartstart64:0000000000000008 RPi_CoresReady
-src/boot/SmartStart64.S:451    .data.smartstart64:0000000000000014 RPi_CompileMode
-src/boot/SmartStart64.S:448    .data.smartstart64:0000000000000010 RPi_CpuId
+src/boot/SmartStart64.S:447    .data.smartstart64:0000000000000004 RPi_BootAddr
+src/boot/SmartStart64.S:444    .data.smartstart64:0000000000000000 RPi_IO_Base_Addr
+src/boot/SmartStart64.S:450    .data.smartstart64:0000000000000008 RPi_CoresReady
+src/boot/SmartStart64.S:459    .data.smartstart64:0000000000000014 RPi_CompileMode
+src/boot/SmartStart64.S:456    .data.smartstart64:0000000000000010 RPi_CpuId
 src/boot/SmartStart64.S:71     .text.startup:0000000000000058 multicore_start
 src/boot/SmartStart64.S:91     .text.startup:00000000000000a4 set_stacks
 src/boot/SmartStart64.S:140    .text.startup:0000000000000104 exit_el1
 src/boot/SmartStart64.S:153    .text.startup:0000000000000124 cpu0_exit_multicore_park
 src/boot/SmartStart64.S:227    .text.startup:0000000000000260 StartSecondarySpin
-src/boot/SmartStart64.S:397    .text.GPUaddrToARMaddr:0000000000000800 VectorTable
+src/boot/SmartStart64.S:405    .text.GPUaddrToARMaddr:0000000000000800 VectorTable
 src/boot/SmartStart64.S:172    .text.startup:0000000000000148 .bss_cleared
 src/boot/SmartStart64.S:168    .text.startup:000000000000013c .bss_zero_loop
 src/boot/SmartStart64.S:183    .text.startup:000000000000015c .WaitCore1ACK
@@ -1449,7 +1502,7 @@ src/boot/SmartStart64.S:219    .text.startup:00000000000001b0 $d
 src/boot/SmartStart64.S:226    .text.startup:0000000000000260 $x
 src/boot/SmartStart64.S:233    .text.startup:0000000000000274 secondary_spin
 src/boot/SmartStart64.S:247    .text.startup:000000000000029c RPi_CpuIdString
-src/boot/SmartStart64.S:427    .rodata.cpuid:0000000000000000 ARM8_STR
+src/boot/SmartStart64.S:435    .rodata.cpuid:0000000000000000 ARM8_STR
 src/boot/SmartStart64.S:251    .text.startup:00000000000002a8 $d
 src/boot/SmartStart64.S:255    .text.startup:00000000000002b0 EnableInterrupts
 src/boot/SmartStart64.S:256    .text.startup:00000000000002b0 $x
@@ -1464,9 +1517,11 @@ src/boot/SmartStart64.S:320    .text.GPUaddrToARMaddr:0000000000000000 GPUaddrTo
 src/boot/SmartStart64.S:330    .text.GPUaddrToARMaddr:000000000000000c c_irq_handler
 src/boot/SmartStart64.S:335    .text.GPUaddrToARMaddr:0000000000000010 c_irq_identify_and_clear_source
 src/boot/SmartStart64.S:341    .text.GPUaddrToARMaddr:0000000000000014 irq_handler
-src/boot/SmartStart64.S:426    .rodata.cpuid:0000000000000000 $d
-src/boot/SmartStart64.S:433    .data.smartstart64:0000000000000000 $d
-src/boot/SmartStart64.S:445    .data.smartstart64:000000000000000c RPi_CPUBootMode
+src/boot/SmartStart64.S:390    .text.GPUaddrToARMaddr:00000000000000c0 svc_handler
+src/boot/SmartStart64.S:394    .text.GPUaddrToARMaddr:00000000000000c4 tryToPassAChar
+src/boot/SmartStart64.S:434    .rodata.cpuid:0000000000000000 $d
+src/boot/SmartStart64.S:441    .data.smartstart64:0000000000000000 $d
+src/boot/SmartStart64.S:453    .data.smartstart64:000000000000000c RPi_CPUBootMode
 
 UNDEFINED SYMBOLS
 __EL2_stack_core0
@@ -1480,14 +1535,15 @@ __EL1_stack_core2
 __EL0_stack_core2
 __EL2_stack_core3
 __EL1_stack_core3
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 12
+
+
 __EL0_stack_core3
 __bss_end__
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 12
-
-
 __bss_start__
 kernel_main
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
+handleInterrupt
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 1
 
 
    1              		.arch armv8-a
@@ -1547,7 +1603,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
   55 00b0 E0030CAA 		mov	x0, x12
   56 00b4 1F2003D5 		.p2align 3
   57              	.L7:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 2
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 2
 
 
   58 00b8 02004039 		ldrb	w2, [x0]
@@ -1607,7 +1663,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  111 0174 E77C0353 		lsr	w7, w7, 3
  112 0178 6300058B 		add	x3, x3, x5
  113 017c 41050034 		cbz	w1, .L34
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 3
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 3
 
 
  114 0180 087D7FD3 		ubfiz	x8, x8, 1, 32
@@ -1667,7 +1723,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  168              		.p2align 2
  169              	.L39:
  170 0238 E903062A 		mov	w9, w6
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 4
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 4
 
 
  171              	.L27:
@@ -1727,7 +1783,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  224 02f4 E7781F53 		lsl	w7, w7, 1
  225 02f8 83C0238B 		add	x3, x4, x3, sxtw
  226 02fc 6B7D0353 		lsr	w11, w11, 3
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 5
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 5
 
 
  227 0300 4A7D0253 		lsr	w10, w10, 2
@@ -1787,7 +1843,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  281              		.type	DiagLine16, %function
  282              	DiagLine16:
  283 03b0 10C44229 		ldp	w16, w17, [x0, 20]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 6
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 6
 
 
  284 03b4 3F00026B 		cmp	w1, w2
@@ -1847,7 +1903,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  337 0470 020840B9 		ldr	w2, [x0, 8]
  338 0474 211C1E53 		ubfiz	w1, w1, 2, 8
  339 0478 F37BBFA9 		stp	x19, x30, [sp, -16]!
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 7
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 7
 
 
  340 047c 12000090 		adrp	x18, BitFont
@@ -1907,7 +1963,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  394 0548 21040011 		add	w1, w1, 1
  395 054c 3F00136B 		cmp	w1, w19
  396 0550 61FCFF54 		bne	.L65
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 8
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 8
 
 
  397 0554 DE230011 		add	w30, w30, 8
@@ -1967,7 +2023,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  449              	.L70:
  450 0614 FF430091 		add	sp, sp, 16
  451 0618 C0035FD6 		ret
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 9
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 9
 
 
  452              		.size	PutImage16, .-PutImage16
@@ -2027,7 +2083,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  504 06c4 060840B9 		ldr	w6, [x0, 8]
  505 06c8 070C4029 		ldp	w7, w3, [x0]
  506 06cc 8404040B 		add	w4, w4, w4, lsl 1
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 10
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 10
 
 
  507 06d0 057D061B 		mul	w5, w8, w6
@@ -2087,7 +2143,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  560 0788 6304030B 		add	w3, w3, w3, lsl 1
  561 078c A4C0248B 		add	x4, x5, x4, sxtw
  562 0790 6300048B 		add	x3, x3, x4
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 11
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 11
 
 
  563 0794 E1010034 		cbz	w1, .L108
@@ -2147,7 +2203,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  617 084c 09094039 		ldrb	w9, [x8, 2]
  618 0850 A9080039 		strb	w9, [x5, 2]
  619 0854 A5000B8B 		add	x5, x5, x11
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 12
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 12
 
 
  620 0858 68000054 		bhi	.L116
@@ -2207,7 +2263,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  674 0908 A8040039 		strb	w8, [x5, 1]
  675 090c 7F800071 		cmp	w3, 32
  676 0910 A7080039 		strb	w7, [x5, 2]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 13
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 13
 
 
  677 0914 A1FDFF54 		bne	.L124
@@ -2267,7 +2323,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  731 09d0 6300088B 		add	x3, x3, x8
  732 09d4 5F00096B 		cmp	w2, w9
  733 09d8 81FDFF54 		bne	.L131
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 14
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 14
 
 
  734              	.L128:
@@ -2327,7 +2383,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  786 0a78 A3C0238B 		add	x3, x5, x3, sxtw
  787 0a7c 84741E53 		lsl	w4, w4, 2
  788 0a80 6300048B 		add	x3, x3, x4
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 15
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 15
 
 
  789 0a84 A1010034 		cbz	w1, .L158
@@ -2387,7 +2443,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  843 0b30 04008052 		mov	w4, 0
  844 0b34 1F2003D5 		.p2align 3
  845              	.L171:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 16
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 16
 
 
  846 0b38 C50040B9 		ldr	w5, [x6]
@@ -2447,7 +2503,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  900              		.size	DiagLine32, .-DiagLine32
  901              		.align	2
  902 0be8 1F2003D5 		.p2align 4,,15
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 17
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 17
 
 
  902      1F2003D5 
@@ -2507,7 +2563,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  956              		.align	2
  957 0c94 1F2003D5 		.p2align 4,,15
  957      1F2003D5 
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 18
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 18
 
 
  957      1F2003D5 
@@ -2567,7 +2623,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1011 0d50 E9030C2A 		mov	w9, w12
  1012 0d54 F30300AA 		mov	x19, x0
  1013 0d58 E8830391 		add	x8, sp, 224
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 19
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 19
 
 
  1014 0d5c EEC30291 		add	x14, sp, 176
@@ -2627,7 +2683,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1068 0e14 02001D32 		orr	w2, w0, 8
  1069 0e18 00109752 		mov	w0, 47232
  1070 0e1c 2100000B 		add	w1, w1, w0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 20
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 20
 
 
  1071              		.p2align 3
@@ -2687,7 +2743,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1124 0ecc E20F0729 		stp	w2, w3, [sp, 56]
  1125 0ed0 E4170829 		stp	w4, w5, [sp, 64]
  1126 0ed4 E67F0929 		stp	w6, wzr, [sp, 72]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 21
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 21
 
 
  1127 0ed8 E28F0BA9 		stp	x2, x3, [sp, 184]
@@ -2747,7 +2803,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1181 0f88 E0C30091 		add	x0, sp, 48
  1182 0f8c E82301A9 		stp	x8, x8, [sp, 16]
  1183 0f90 E71300F9 		str	x7, [sp, 32]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 22
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 22
 
 
  1184 0f94 E67F0529 		stp	w6, wzr, [sp, 40]
@@ -2807,7 +2863,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1236 1044 06008052 		mov	w6, 0
  1237 1048 2298477A 		ccmp	w1, 7, 2, ls
  1238 104c 88020054 		bhi	.L316
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 23
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 23
 
 
  1239 1050 A3999952 		mov	w3, 52429
@@ -2867,7 +2923,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1291              		.p2align 2
  1292              	.L321:
  1293 1108 01008052 		mov	w1, 0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 24
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 24
 
 
  1294 110c E003012A 		mov	w0, w1
@@ -2927,7 +2983,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1346              		.global	gpio_clearEvent
  1347              		.type	gpio_clearEvent, %function
  1348              	gpio_clearEvent:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 25
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 25
 
 
  1349 11a0 1FD80071 		cmp	w0, 54
@@ -2987,7 +3043,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1402              		.p2align 2
  1403              	.L335:
  1404 124c A5000191 		add	x5, x5, 64
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 26
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 26
 
 
  1405 1250 E203012A 		mov	w2, w1
@@ -3047,7 +3103,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1459 12f4 2020C01A 		lsl	w0, w1, w0
  1460 12f8 C508058B 		add	x5, x6, x5, lsl 2
  1461 12fc A09800B9 		str	w0, [x5, 152]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 27
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 27
 
 
  1462              		.p2align 3
@@ -3107,7 +3163,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1514 1398 210C4011 		add	w1, w1, 12288
  1515 139c 1F2003D5 		.p2align 3
  1516              	.L358:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 28
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 28
 
 
  1517 13a0 220840B9 		ldr	w2, [x1, 8]
@@ -3167,7 +3223,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1569 1438 C0035FD6 		ret
  1570              		.size	mailbox_write, .-mailbox_write
  1571              		.align	2
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 29
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 29
 
 
  1572 143c 1F2003D5 		.p2align 4,,15
@@ -3227,7 +3283,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1624 14e8 E203082A 		mov	w2, w8
  1625 14ec E503082A 		mov	w5, w8
  1626 14f0 E403082A 		mov	w4, w8
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 30
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 30
 
 
  1627 14f4 E3C30391 		add	x3, sp, 240
@@ -3287,7 +3343,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1681 15ac 4200000B 		add	w2, w2, w0
  1682              		.p2align 3
  1683              	.L379:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 31
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 31
 
 
  1684 15b0 403840B9 		ldr	w0, [x2, 56]
@@ -3347,7 +3403,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1738 165c 13008052 		mov	w19, 0
  1739              	.L417:
  1740 1660 E003132A 		mov	w0, w19
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 32
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 32
 
 
  1741 1664 F37BC2A8 		ldp	x19, x30, [sp], 32
@@ -3407,7 +3463,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1795 1714 33008052 		mov	w19, 1
  1796 1718 E003132A 		mov	w0, w19
  1797 171c F37BC2A8 		ldp	x19, x30, [sp], 32
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 33
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 33
 
 
  1798 1720 C0035FD6 		ret
@@ -3467,7 +3523,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1850 17c4 82008052 		mov	w2, 4
  1851 17c8 6200A072 		movk	w2, 0x3, lsl 16
  1852 17cc 06008052 		mov	w6, 0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 34
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 34
 
 
  1853 17d0 65008052 		mov	w5, 3
@@ -3527,7 +3583,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1907 1880 01000090 		adrp	x1, RPi_CoresReady
  1908 1884 E40313AA 		mov	x4, x19
  1909 1888 F37BC1A8 		ldp	x19, x30, [sp], 16
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 35
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 35
 
 
  1910 188c 02000090 		adrp	x2, RPi_CpuId
@@ -3587,7 +3643,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1964 1934 00140011 		add	w0, w0, 5
  1965 1938 E203006B 		negs	w2, w0
  1966 193c 03040012 		and	w3, w0, 3
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 36
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 36
 
 
  1967 1940 42040012 		and	w2, w2, 3
@@ -3647,7 +3703,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2021 19e8 E00314AA 		mov	x0, x20
  2022 19ec 7F340071 		cmp	w3, 13
  2023 19f0 41FDFF54 		bne	.L478
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 37
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 37
 
 
  2024 19f4 BF2200B9 		str	wzr, [x21, 32]
@@ -3707,7 +3763,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2077              	.L482:
  2078 1a84 C0035FD6 		ret
  2079              		.size	SetDCBrushColor, .-SetDCBrushColor
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 38
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 38
 
 
  2080              		.align	2
@@ -3767,7 +3823,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2133 1b14 CA020054 		bge	.L515
  2134 1b18 6100024B 		sub	w1, w3, w2
  2135 1b1c 02008012 		mov	w2, -1
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 39
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 39
 
 
  2136 1b20 E403022A 		mov	w4, w2
@@ -3827,7 +3883,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2190 1bb8 4D020054 		ble	.L520
  2191 1bbc 13000090 		adrp	x19, .LANCHOR0
  2192 1bc0 73020091 		add	x19, x19, :lo12:.LANCHOR0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 40
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 40
 
 
  2193 1bc4 73120091 		add	x19, x19, 4
@@ -3887,7 +3943,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2246 1c60 100482D2 		mov	x16, 4128
  2247 1c64 FF6330CB 		sub	sp, sp, x16
  2248 1c68 E6830091 		add	x6, sp, 32
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 41
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 41
 
 
  2249 1c6c FE0300F9 		str	x30, [sp]
@@ -3947,7 +4003,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2303 1d2c E80305AA 		mov	x8, x5
  2304 1d30 E10306AA 		mov	x1, x6
  2305 1d34 1F2003D5 		.p2align 3
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 42
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 42
 
 
  2306              	.L550:
@@ -4007,7 +4063,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2360              	.L557:
  2361 1df0 42100091 		add	x2, x2, 4
  2362 1df4 41C05F38 		ldrb	w1, [x2, -4]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 43
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 43
 
 
  2363 1df8 C1340038 		strb	w1, [x6], 3
@@ -4067,7 +4123,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2417 1ebc C4F01F38 		strb	w4, [x6, -1]
  2418 1ec0 01FFFF54 		bne	.L548
  2419 1ec4 7CFFFF17 		b	.L543
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 44
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 44
 
 
  2420              		.p2align 2
@@ -4127,7 +4183,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2474 1f7c E40306AA 		mov	x4, x6
  2475 1f80 A804098B 		add	x8, x5, x9, lsl 1
  2476 1f84 1F2003D5 		.p2align 3
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 45
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 45
 
 
  2477              	.L560:
@@ -4187,7 +4243,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2531 2020 06144629 		ldp	w6, w5, [x0, 48]
  2532 2024 C58005AA 		orr	x5, x6, x5, lsl 32
  2533 2028 A0003FD6 		blr	x5
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 46
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 46
 
 
  2534 202c 20008052 		mov	w0, 1
@@ -4247,7 +4303,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2587 20e4 E83300B9 		str	w8, [sp, 48]
  2588 20e8 E603152A 		mov	w6, w21
  2589 20ec F33B00B9 		str	w19, [sp, 56]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 47
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 47
 
 
  2590 20f0 62009052 		mov	w2, 32771
@@ -4307,7 +4363,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2644 21b4 C0035FD6 		ret
  2645              		.p2align 2
  2646              	.L626:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 48
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 48
 
 
  2647 21b8 62008052 		mov	w2, 3
@@ -4367,7 +4423,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2701 2274 84000091 		add	x4, x4, :lo12:HorzLine32
  2702 2278 03000090 		adrp	x3, DiagLine32
  2703 227c 63000091 		add	x3, x3, :lo12:DiagLine32
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 49
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 49
 
 
  2704 2280 02000090 		adrp	x2, WriteChar32
@@ -4427,7 +4483,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2757              	GetConsole_Height:
  2758 2300 00000090 		adrp	x0, .LANCHOR0+16
  2759 2304 000040B9 		ldr	w0, [x0, #:lo12:.LANCHOR0+16]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 50
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 50
 
 
  2760 2308 C0035FD6 		ret
@@ -4487,7 +4543,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2810              	_close:
  2811 2380 00008012 		mov	w0, -1
  2812 2384 C0035FD6 		ret
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 51
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 51
 
 
  2813              		.size	_close, .-_close
@@ -4547,7 +4603,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2862 23f0 15000090 		adrp	x21, .LANCHOR0
  2863 23f4 B5020091 		add	x21, x21, :lo12:.LANCHOR0
  2864 23f8 F40301AA 		mov	x20, x1
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 52
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 52
 
 
  2865 23fc 3600168B 		add	x22, x1, x22
@@ -4607,7 +4663,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2919 24ac E2FFFF17 		b	.L652
  2920              		.size	_write, .-_write
  2921              		.global	console
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 53
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 53
 
 
  2922              		.global	BitFontEnd
@@ -4667,7 +4723,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2976 00c0 663C0000 		.word	15462
  2977 00c4 3C666666 		.word	1717986876
  2978 00c8 18187E18 		.word	410916888
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 54
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 54
 
 
  2979 00cc 00000000 		.word	0
@@ -4727,7 +4783,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3033 01a4 FE0C1800 		.word	1576190
  3034 01a8 0000180C 		.word	202899456
  3035 01ac 00000000 		.word	0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 55
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 55
 
 
  3036 01b0 00000000 		.word	0
@@ -4787,7 +4843,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3090 0288 0C183030 		.word	808458252
  3091 028c 00000000 		.word	0
  3092 0290 18300000 		.word	12312
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 56
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 56
 
 
  3093 0294 0C0C0C0C 		.word	202116108
@@ -4847,7 +4903,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3147 036c 00000000 		.word	0
  3148 0370 C6FE0000 		.word	65222
  3149 0374 180C0606 		.word	101059608
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 57
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 57
 
 
  3150 0378 30303030 		.word	808464432
@@ -4907,7 +4963,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3204 0450 66FE0000 		.word	65126
  3205 0454 68786862 		.word	1651013736
  3206 0458 FE666260 		.word	1617061630
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 58
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 58
 
 
  3207 045c 00000000 		.word	0
@@ -4967,7 +5023,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3261 0534 0C3860C6 		.word	-966772724
  3262 0538 7CC6C606 		.word	113690236
  3263 053c 00000000 		.word	0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 59
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 59
 
 
  3264 0540 7E7E0000 		.word	32382
@@ -5027,7 +5083,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3318 0618 76CCCCCC 		.word	-858993546
  3319 061c 00000000 		.word	0
  3320 0620 60E00000 		.word	57440
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 60
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 60
 
 
  3321 0624 666C7860 		.word	1618504806
@@ -5087,7 +5143,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3375 06fc 00000000 		.word	0
  3376 0700 00000000 		.word	0
  3377 0704 6666DC00 		.word	14444134
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 61
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 61
 
 
  3378 0708 7C666666 		.word	1717986940
@@ -5147,7 +5203,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3432 07e0 DC760000 		.word	30428
  3433 07e4 00000000 		.word	0
  3434 07e8 00000000 		.word	0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 62
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 62
 
 
  3435 07ec 00000000 		.word	0
@@ -5207,7 +5263,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3489 08c4 18183800 		.word	3676184
  3490 08c8 3C181818 		.word	404232252
  3491 08cc 00000000 		.word	0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 63
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 63
 
 
  3492 08d0 18306000 		.word	6303768
@@ -5267,7 +5323,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3546 09a8 7CC6C6C6 		.word	-960051588
  3547 09ac 00000000 		.word	0
  3548 09b0 3C181800 		.word	1579068
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 64
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 64
 
 
  3549 09b4 60606066 		.word	1717592160
@@ -5327,7 +5383,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3603 0a8c 00000000 		.word	0
  3604 0a90 00000000 		.word	0
  3605 0a94 C0FE0000 		.word	65216
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 65
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 65
 
 
  3606 0a98 00C0C0C0 		.word	-1061109760
@@ -5387,7 +5443,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3660 0b70 00000000 		.word	0
  3661 0b74 FE000000 		.word	254
  3662 0b78 36363636 		.word	909522486
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 66
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 66
 
 
  3663 0b7c 36363636 		.word	909522486
@@ -5447,7 +5503,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3717 0c54 FF181818 		.word	404232447
  3718 0c58 18181818 		.word	404232216
  3719 0c5c 18181818 		.word	404232216
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 67
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 67
 
 
  3720 0c60 18181818 		.word	404232216
@@ -5507,7 +5563,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3774 0d38 00000000 		.word	0
  3775 0d3c 00000000 		.word	0
  3776 0d40 18181818 		.word	404232216
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 68
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 68
 
 
  3777 0d44 1F181F18 		.word	404690975
@@ -5567,7 +5623,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3831 0e1c 00000000 		.word	0
  3832 0e20 C6FE0000 		.word	65222
  3833 0e24 C0C0C0C6 		.word	-960446272
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 69
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 69
 
 
  3834 0e28 C0C0C0C0 		.word	-1061109568
@@ -5627,7 +5683,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3888 0f00 00000000 		.word	0
  3889 0f04 FE0000FE 		.word	-33554178
  3890 0f08 00FE0000 		.word	65024
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 70
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 70
 
 
  3891 0f0c 00000000 		.word	0
@@ -5687,7 +5743,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3945 0fe4 7C7C7C7C 		.word	2088533116
  3946 0fe8 007C7C7C 		.word	2088532992
  3947 0fec 00000000 		.word	0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 71
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 71
 
 
  3948 0ff0 00000000 		.word	0
@@ -5747,7 +5803,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3989 0067 00       		.zero	1
  3990              	.LC2:
  3991 0068 44657465 		.string	"Detected %s CPU, part id: 0x%03X, Cores made ready for use: %u\n"
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 72
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 72
 
 
  3991      63746564 
@@ -5768,89 +5824,89 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3996      7574696F 
  3996      6E202569 
  3997              		.ident	"GCC: (GNU Toolchain for the A-profile Architecture 8.2-2019.01 (arm-rel-8.28)) 8.2.1 20180
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 73
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 73
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 rpi-SmartStart.c
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4      .text:0000000000000000 $x
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:7      .text:0000000000000000 ClearArea16
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:97     .text:0000000000000140 VertLine16
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:214    .text:00000000000002d0 HorzLine16
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:282    .text:00000000000003b0 DiagLine16
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:336    .text:0000000000000470 WriteChar16
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2927   .rodata:0000000000000000 BitFont
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:405    .text:0000000000000570 PutImage16
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:456    .text:0000000000000620 ClearArea24
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:502    .text:00000000000006c0 VertLine24
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:553    .text:0000000000000770 HorzLine24
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:588    .text:00000000000007e0 DiagLine24
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:635    .text:0000000000000880 WriteChar24
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:688    .text:0000000000000930 PutImage24
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:741    .text:00000000000009f0 ClearArea32
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:779    .text:0000000000000a60 VertLine32
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:830    .text:0000000000000b00 HorzLine32
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:861    .text:0000000000000b60 DiagLine32
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:904    .text:0000000000000bf0 WriteChar32
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:913    .text:0000000000000c00 PutImage32
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:959    .text:0000000000000ca0 mailbox_tag_message.constprop.4
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1006   .text:0000000000000d40 mailbox_tag_message.constprop.7
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1112   .text:0000000000000ea0 mailbox_tag_message.constprop.5
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1174   .text:0000000000000f70 mailbox_tag_message.constprop.6
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1234   .text:0000000000001040 gpio_setup
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1266   .text:00000000000010b0 gpio_output
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1301   .text:0000000000001120 gpio_input
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1325   .text:0000000000001160 gpio_checkEvent
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1348   .text:00000000000011a0 gpio_clearEvent
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1370   .text:00000000000011e0 gpio_edgeDetect
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1423   .text:0000000000001280 gpio_fixResistor
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1492   .text:0000000000001360 timer_getTickCount
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1511   .text:0000000000001390 timer_wait
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1542   .text:00000000000013f0 tick_difference
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1550   .text:0000000000001400 mailbox_write
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1575   .text:0000000000001440 mailbox_read
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1601   .text:0000000000001490 mailbox_tag_message
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1726   .text:0000000000001630 set_Activity_LED
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1844   .text:00000000000017b0 ARM_setmaxspeed
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1890   .text:0000000000001840 displaySmartStart
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1926   .text:00000000000018b0 Embedded_Console_WriteChar
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1982   .text:0000000000001960 WriteText
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2058   .text:0000000000001a50 SetDCPenColor
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2071   .text:0000000000001a70 SetDCBrushColor
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2084   .text:0000000000001a90 MoveToEx
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2105   .text:0000000000001ac0 LineTo
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2177   .text:0000000000001b90 TextOut
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2219   .text:0000000000001c10 BmpOut
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2245   .text:0000000000001c60 CvtBmpLine
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2514   .text:0000000000002000 SmartStartPutPixelRaw
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2524   .text:0000000000002010 Rectangle
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2542   .text:0000000000002040 PiConsole_Init
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2729   .text:00000000000022d0 GetConsoleDC
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2739   .text:00000000000022e0 GetConsole_FrameBuffer
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2748   .text:00000000000022f0 GetConsole_Width
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 74
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4      .text:0000000000000000 $x
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:7      .text:0000000000000000 ClearArea16
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:97     .text:0000000000000140 VertLine16
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:214    .text:00000000000002d0 HorzLine16
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:282    .text:00000000000003b0 DiagLine16
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:336    .text:0000000000000470 WriteChar16
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2927   .rodata:0000000000000000 BitFont
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:405    .text:0000000000000570 PutImage16
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:456    .text:0000000000000620 ClearArea24
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:502    .text:00000000000006c0 VertLine24
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:553    .text:0000000000000770 HorzLine24
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:588    .text:00000000000007e0 DiagLine24
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:635    .text:0000000000000880 WriteChar24
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:688    .text:0000000000000930 PutImage24
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:741    .text:00000000000009f0 ClearArea32
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:779    .text:0000000000000a60 VertLine32
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:830    .text:0000000000000b00 HorzLine32
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:861    .text:0000000000000b60 DiagLine32
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:904    .text:0000000000000bf0 WriteChar32
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:913    .text:0000000000000c00 PutImage32
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:959    .text:0000000000000ca0 mailbox_tag_message.constprop.4
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1006   .text:0000000000000d40 mailbox_tag_message.constprop.7
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1112   .text:0000000000000ea0 mailbox_tag_message.constprop.5
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1174   .text:0000000000000f70 mailbox_tag_message.constprop.6
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1234   .text:0000000000001040 gpio_setup
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1266   .text:00000000000010b0 gpio_output
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1301   .text:0000000000001120 gpio_input
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1325   .text:0000000000001160 gpio_checkEvent
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1348   .text:00000000000011a0 gpio_clearEvent
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1370   .text:00000000000011e0 gpio_edgeDetect
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1423   .text:0000000000001280 gpio_fixResistor
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1492   .text:0000000000001360 timer_getTickCount
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1511   .text:0000000000001390 timer_wait
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1542   .text:00000000000013f0 tick_difference
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1550   .text:0000000000001400 mailbox_write
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1575   .text:0000000000001440 mailbox_read
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1601   .text:0000000000001490 mailbox_tag_message
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1726   .text:0000000000001630 set_Activity_LED
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1844   .text:00000000000017b0 ARM_setmaxspeed
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1890   .text:0000000000001840 displaySmartStart
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1926   .text:00000000000018b0 Embedded_Console_WriteChar
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1982   .text:0000000000001960 WriteText
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2058   .text:0000000000001a50 SetDCPenColor
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2071   .text:0000000000001a70 SetDCBrushColor
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2084   .text:0000000000001a90 MoveToEx
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2105   .text:0000000000001ac0 LineTo
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2177   .text:0000000000001b90 TextOut
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2219   .text:0000000000001c10 BmpOut
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2245   .text:0000000000001c60 CvtBmpLine
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2514   .text:0000000000002000 SmartStartPutPixelRaw
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2524   .text:0000000000002010 Rectangle
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2542   .text:0000000000002040 PiConsole_Init
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2729   .text:00000000000022d0 GetConsoleDC
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2739   .text:00000000000022e0 GetConsole_FrameBuffer
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2748   .text:00000000000022f0 GetConsole_Width
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 74
 
 
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2757   .text:0000000000002300 GetConsole_Height
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2766   .text:0000000000002310 _sbrk
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2783   .text:0000000000002340 _kill
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2794   .text:0000000000002360 _getpid
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2802   .text:0000000000002370 _read
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2810   .text:0000000000002380 _close
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2818   .text:0000000000002390 _lseek
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2826   .text:00000000000023a0 _isatty
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2834   .text:00000000000023b0 _fstat
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2844   .text:00000000000023c0 _exit
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2853   .text:00000000000023d0 _write
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:3969   .bss:0000000000000004 console
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:3980   .rodata:0000000000001000 BitFontEnd
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2924   .rodata:0000000000000000 $d
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:3953   .data:0000000000000000 $d
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:3957   .data:0000000000000000 ActivityGPIOPort
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:3960   .bss:0000000000000000 $d
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:3964   .bss:0000000000000000 ModelCheckHasRun
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:3974   .bss:0000000000000068 heap_end.4634
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:3983   .rodata.str1.8:0000000000000000 $d
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2757   .text:0000000000002300 GetConsole_Height
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2766   .text:0000000000002310 _sbrk
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2783   .text:0000000000002340 _kill
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2794   .text:0000000000002360 _getpid
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2802   .text:0000000000002370 _read
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2810   .text:0000000000002380 _close
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2818   .text:0000000000002390 _lseek
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2826   .text:00000000000023a0 _isatty
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2834   .text:00000000000023b0 _fstat
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2844   .text:00000000000023c0 _exit
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2853   .text:00000000000023d0 _write
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:3969   .bss:0000000000000004 console
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:3980   .rodata:0000000000001000 BitFontEnd
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2924   .rodata:0000000000000000 $d
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:3953   .data:0000000000000000 $d
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:3957   .data:0000000000000000 ActivityGPIOPort
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:3960   .bss:0000000000000000 $d
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:3964   .bss:0000000000000000 ModelCheckHasRun
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:3974   .bss:0000000000000068 heap_end.4634
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:3983   .rodata.str1.8:0000000000000000 $d
 
 UNDEFINED SYMBOLS
 ARMaddrToGPUaddr
@@ -5864,7 +5920,7 @@ hal_io_serial_puts
 GPUaddrToARMaddr
 _end
 errno
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 1
 
 
    1              		.arch armv8-a
@@ -5924,7 +5980,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
   55 00a4 1F2003D5 		.p2align 3
   56              	.L14:
   57 00a8 26140038 		strb	w6, [x1], 1
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 2
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 2
 
 
   58 00ac 7F0001EB 		cmp	x3, x1
@@ -5984,7 +6040,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  112 0160 02000014 		b	.L24
  113              		.p2align 2
  114              	.L60:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 3
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 3
 
 
  115 0164 C5F05F38 		ldrb	w5, [x6, -1]
@@ -6044,7 +6100,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  169              		.p2align 2
  170              	.L31:
  171 0214 E803092A 		mov	w8, w9
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 4
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 4
 
 
  172              	.L11:
@@ -6104,7 +6160,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  224              		.type	vsprintf, %function
  225              	vsprintf:
  226 02b0 F353B9A9 		stp	x19, x20, [sp, -112]!
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 5
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 5
 
 
  227 02b4 F30301AA 		mov	x19, x1
@@ -6164,7 +6220,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  281 0374 3FAC0071 		cmp	w1, 43
  282 0378 C1FEFF54 		bne	.L216
  283              	.L66:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 6
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 6
 
 
  284 037c 9C031E32 		orr	w28, w28, 4
@@ -6224,7 +6280,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  338              	.L236:
  339 042c E13E0091 		add	x1, x23, 15
  340 0430 E00317AA 		mov	x0, x23
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 7
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 7
 
 
  341 0434 37F07D92 		and	x23, x1, -8
@@ -6284,7 +6340,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  395 04d8 BFB00171 		cmp	w5, 108
  396 04dc A1FDFF54 		bne	.L135
  397              	.L223:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 8
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 8
 
 
  398 04e0 5826F837 		tbnz	w24, #31, .L136
@@ -6344,7 +6400,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  452 058c F40313AA 		mov	x20, x19
  453 0590 1F300171 		cmp	w0, 76
  454 0594 04008052 		mov	w4, 0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 9
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 9
 
 
  455 0598 24105A7A 		ccmp	w1, w26, 4, ne
@@ -6404,7 +6460,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  509 0644 3F600171 		cmp	w1, 88
  510 0648 05008012 		mov	w5, -1
  511 064c 01FCFF54 		bne	.L97
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 10
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 10
 
 
  512 0650 02028052 		mov	w2, 16
@@ -6464,7 +6520,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  566 06f4 80FFFF17 		b	.L139
  567              		.p2align 2
  568              	.L95:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 11
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 11
 
 
  569 06f8 A0048052 		mov	w0, 37
@@ -6524,7 +6580,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  623 07a4 2DF2FF54 		ble	.L214
  624              		.p2align 3
  625              	.L120:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 12
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 12
 
 
  626 07a8 A4160038 		strb	w4, [x21], 1
@@ -6584,7 +6640,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  680 085c F803052A 		mov	w24, w5
  681 0860 F7F07D92 		and	x23, x7, -8
  682 0864 9FFFFF17 		b	.L141
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 13
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 13
 
 
  683              	.L145:
@@ -6644,7 +6700,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  737 0924 19028052 		mov	w25, 16
  738 0928 38D8FF36 		tbz	w24, #31, .L236
  739 092c EDFFFF17 		b	.L122
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 14
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 14
 
 
  740              	.L234:
@@ -6704,7 +6760,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  794 09d8 E00317AA 		mov	x0, x23
  795 09dc 37F07D92 		and	x23, x1, -8
  796              	.L127:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 15
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 15
 
 
  797 09e0 000040F9 		ldr	x0, [x0]
@@ -6764,7 +6820,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  851 0a98 F803012A 		mov	w24, w1
  852 0a9c 57F07D92 		and	x23, x2, -8
  853 0aa0 DCFFFF17 		b	.L130
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 16
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 16
 
 
  854              	.L232:
@@ -6824,7 +6880,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  908              	.L87:
  909 0b58 01230011 		add	w1, w24, 8
  910 0b5c 3F000071 		cmp	w1, 0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 17
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 17
 
 
  911 0b60 0D030054 		ble	.L89
@@ -6884,7 +6940,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  965 0c08 E82744A9 		ldp	x8, x9, [sp, 64]
  966 0c0c EA2F01A9 		stp	x10, x11, [sp, 16]
  967 0c10 E82702A9 		stp	x8, x9, [sp, 32]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 18
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 18
 
 
  968 0c14 E017803D 		str	q0, [sp, 80]
@@ -6944,7 +7000,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1020 0cd8 E68B01F9 		str	x6, [sp, 784]
  1021 0cdc E78F01F9 		str	x7, [sp, 792]
  1022 0ce0 00000094 		bl	vsprintf
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 19
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 19
 
 
  1023 0ce4 F503002A 		mov	w21, w0
@@ -6978,24 +7034,24 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1049      38394142 
  1049      43444546 
  1050              		.ident	"GCC: (GNU Toolchain for the A-profile Architecture 8.2-2019.01 (arm-rel-8.28)) 8.2.1 20180
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 20
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 20
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 emb-stdio.c
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4      .text:0000000000000000 $x
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:7      .text:0000000000000000 number
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:225    .text:00000000000002b0 vsprintf
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:954    .text:0000000000000be0 sprintf
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:989    .text:0000000000000c60 printf
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1044   .rodata:0000000000000000 $d
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1048   .rodata:0000000000000000 digits.3946
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4      .text:0000000000000000 $x
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:7      .text:0000000000000000 number
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:225    .text:00000000000002b0 vsprintf
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:954    .text:0000000000000be0 sprintf
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:989    .text:0000000000000c60 printf
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1044   .rodata:0000000000000000 $d
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1048   .rodata:0000000000000000 digits.3946
 
 UNDEFINED SYMBOLS
 __locale_ctype_ptr
 strnlen
 Embedded_Console_WriteChar
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 1
 
 
    1              		.arch armv8-a
@@ -7055,7 +7111,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
   55 00b0 A1010054 		bne	.L9
   56 00b4 00008052 		mov	w0, 0
   57 00b8 F55B41A9 		ldp	x21, x22, [sp, 16]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 2
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 2
 
 
   58 00bc F76342A9 		ldp	x23, x24, [sp, 32]
@@ -7115,7 +7171,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  112 016c FE2300F9 		str	x30, [sp, 64]
  113              		.p2align 3
  114              	.L18:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 3
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 3
 
 
  115 0170 C00240B9 		ldr	w0, [x22]
@@ -7175,7 +7231,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  169 0230 00000090 		adrp	x0, .LC2
  170 0234 E203132A 		mov	w2, w19
  171 0238 00000091 		add	x0, x0, :lo12:.LC2
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 4
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 4
 
 
  172 023c 210040B9 		ldr	w1, [x1]
@@ -7235,7 +7291,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  225 02f0 F4020091 		add	x20, x23, :lo12:RPi_IO_Base_Addr
  226 02f4 F803002A 		mov	w24, w0
  227 02f8 F55B01A9 		stp	x21, x22, [sp, 16]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 5
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 5
 
 
  228 02fc 96048052 		mov	w22, 36
@@ -7295,7 +7351,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  282 03a8 E2D390D2 		mov	x2, 34463
  283 03ac 2200A0F2 		movk	x2, 0x1, lsl 16
  284 03b0 BF0202EB 		cmp	x21, x2
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 6
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 6
 
 
  285 03b4 48FDFF54 		bhi	.L64
@@ -7355,7 +7411,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  339 0480 F30300AA 		mov	x19, x0
  340 0484 800240B9 		ldr	w0, [x20]
  341 0488 0000160B 		add	w0, w0, w22
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 7
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 7
 
 
  342 048c 000040B9 		ldr	w0, [x0]
@@ -7415,7 +7471,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  395              	SetFindDataFromFATEntry.part.0:
  396 0530 022C4039 		ldrb	w2, [x0, 11]
  397 0534 226C00B9 		str	w2, [x1, 108]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 8
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 8
 
 
  398 0538 03604039 		ldrb	w3, [x0, 24]
@@ -7475,7 +7531,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  452 0610 02004039 		ldrb	w2, [x0]
  453 0614 22E00539 		strb	w2, [x1, 376]
  454 0618 02044039 		ldrb	w2, [x0, 1]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 9
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 9
 
 
  455 061c 22E40539 		strb	w2, [x1, 377]
@@ -7535,7 +7591,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  509 06dc 61010054 		bne	.L84
  510 06e0 9F0314EB 		cmp	x28, x20
  511 06e4 C80A0054 		bhi	.L86
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 10
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 10
 
 
  512 06e8 F30900B5 		cbnz	x19, .L82
@@ -7595,7 +7651,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  566 07b8 1F4400B9 		str	wzr, [x0, 68]
  567 07bc 26004C11 		add	w6, w1, 3145728
  568 07c0 25004C11 		add	w5, w1, 3145728
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 11
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 11
 
 
  569 07c4 A41240B9 		ldr	w4, [x21, 16]
@@ -7655,7 +7711,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  623 0888 FE2B40F9 		ldr	x30, [sp, 80]
  624 088c F353C6A8 		ldp	x19, x20, [sp], 96
  625 0890 C0035FD6 		ret
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 12
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 12
 
 
  626              		.p2align 2
@@ -7715,7 +7771,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  680 0940 5F03026B 		cmp	w26, w2
  681 0944 9F4E00B9 		str	wzr, [x20, 76]
  682 0948 F3079F1A 		cset	w19, ne
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 13
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 13
 
 
  683 094c AEFFFF17 		b	.L80
@@ -7775,7 +7831,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  737 0a1c 46041F53 		ubfiz	w6, w2, 1, 2
  738 0a20 A108010B 		add	w1, w5, w1, lsl 2
  739 0a24 03091D33 		bfi	w3, w8, 3, 3
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 14
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 14
 
 
  740 0a28 03600039 		strb	w3, [x0, 24]
@@ -7835,7 +7891,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  794 0afc 85010033 		bfi	w5, w12, 0, 1
  795 0b00 21001A12 		and	w1, w1, 64
  796 0b04 13008052 		mov	w19, 0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 15
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 15
 
 
  797 0b08 60010033 		bfi	w0, w11, 0, 1
@@ -7895,7 +7951,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  851              	.L119:
  852 0bc4 94220091 		add	x20, x20, 8
  853 0bc8 F96B03A9 		stp	x25, x26, [sp, 48]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 16
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 16
 
 
  854 0bcc D9820D91 		add	x25, x22, 864
@@ -7955,7 +8011,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  908 0c80 E0031AAA 		mov	x0, x26
  909 0c84 7BFEFF97 		bl	sdSendCommandP
  910 0c88 80010035 		cbnz	w0, .L123
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 17
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 17
 
 
  911 0c8c 804640B9 		ldr	w0, [x20, 68]
@@ -8015,7 +8071,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  965              		.align	2
  966              		.p2align 4,,15
  967              		.type	sdResetCard, %function
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 18
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 18
 
 
  968              	sdResetCard:
@@ -8075,7 +8131,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1022 0df4 42000032 		orr	w2, w2, 1
  1023 0df8 220000B9 		str	w2, [x1]
  1024 0dfc 00000094 		bl	timer_wait
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 19
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 19
 
 
  1025 0e00 00508352 		mov	w0, 6784
@@ -8135,7 +8191,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1079 0ebc F77B42A9 		ldp	x23, x30, [sp, 32]
  1080 0ec0 F353C3A8 		ldp	x19, x20, [sp], 48
  1081 0ec4 C0035FD6 		ret
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 20
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 20
 
 
  1082              		.size	sdResetCard, .-sdResetCard
@@ -8195,7 +8251,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1135 0f88 F91B40F9 		ldr	x25, [sp, 48]
  1136              	.L160:
  1137 0f8c E003162A 		mov	w0, w22
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 21
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 21
 
 
  1138 0f90 F55B41A9 		ldp	x21, x22, [sp, 16]
@@ -8255,7 +8311,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1192              	.L168:
  1193 1048 25084039 		ldrb	w5, [x1, 2]
  1194 104c 21040091 		add	x1, x1, 1
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 22
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 22
 
 
  1195 1050 430040B9 		ldr	w3, [x2]
@@ -8315,7 +8371,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1248      1F2003D5 
  1248      1F2003D5 
  1249              		.type	LoadDrivePartition, %function
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 23
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 23
 
 
  1250              	LoadDrivePartition:
@@ -8375,7 +8431,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1304 11dc 00008052 		mov	w0, 0
  1305 11e0 F35340A9 		ldp	x19, x20, [sp]
  1306 11e4 F55B41A9 		ldp	x21, x22, [sp, 16]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 24
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 24
 
 
  1307 11e8 FE1340F9 		ldr	x30, [sp, 32]
@@ -8435,7 +8491,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1361 12ac 007C061B 		mul	w0, w0, w6
  1362 12b0 42840051 		sub	w2, w2, #33
  1363 12b4 45008052 		mov	w5, 2
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 25
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 25
 
 
  1364 12b8 21040011 		add	w1, w1, 1
@@ -8495,7 +8551,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1417 1360 F353BAA9 		stp	x19, x20, [sp, -96]!
  1418 1364 741C0012 		and	w20, w3, 255
  1419 1368 F55B01A9 		stp	x21, x22, [sp, 16]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 26
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 26
 
 
  1420 136c F76302A9 		stp	x23, x24, [sp, 32]
@@ -8555,7 +8611,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1474 1438 F76342A9 		ldp	x23, x24, [sp, 32]
  1475 143c F96B43A9 		ldp	x25, x26, [sp, 48]
  1476 1440 FB7344A9 		ldp	x27, x28, [sp, 64]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 27
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 27
 
 
  1477 1444 FE2B40F9 		ldr	x30, [sp, 80]
@@ -8615,7 +8671,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1531 14f8 417C1053 		lsr	w1, w2, 16
  1532 14fc 427C1853 		lsr	w2, w2, 24
  1533 1500 03000039 		strb	w3, [x0]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 28
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 28
 
 
  1534 1504 01040039 		strb	w1, [x0, 1]
@@ -8675,7 +8731,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1588 15b8 410340B9 		ldr	w1, [x26]
  1589 15bc 21001B0B 		add	w1, w1, w27
  1590 15c0 210040B9 		ldr	w1, [x1]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 29
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 29
 
 
  1591 15c4 014400B8 		str	w1, [x0], 4
@@ -8735,7 +8791,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1645 1688 C0EAFF34 		cbz	w0, .L240
  1646 168c 68FFFF17 		b	.L296
  1647              	.L301:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 30
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 30
 
 
  1648 1690 F4ECFF34 		cbz	w20, .L296
@@ -8795,7 +8851,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1701 174c 40000036 		tbz	x0, 0, .L308
  1702 1750 E14640B9 		ldr	w1, [x23, 68]
  1703              	.L308:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 31
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 31
 
 
  1704 1754 60220A91 		add	x0, x19, 648
@@ -8855,7 +8911,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1758 1804 54008052 		mov	w20, 2
  1759 1808 E003142A 		mov	w0, w20
  1760 180c F55B41A9 		ldp	x21, x22, [sp, 16]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 32
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 32
 
 
  1761 1810 F77B42A9 		ldp	x23, x30, [sp, 32]
@@ -8915,7 +8971,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1814 18d0 815A1753 		lsl	w1, w20, 9
  1815 18d4 620040B9 		ldr	w2, [x3]
  1816 18d8 2100941A 		csel	w1, w1, w20, eq
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 33
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 33
 
 
  1817 18dc 40430591 		add	x0, x26, 336
@@ -8975,7 +9031,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1871              		.p2align 2
  1872              	.L332:
  1873 1998 E04240B9 		ldr	w0, [x23, 64]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 34
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 34
 
 
  1874 199c F7220091 		add	x23, x23, 8
@@ -9035,7 +9091,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1928 1a68 00000091 		add	x0, x0, :lo12:.LC8
  1929 1a6c 20003FD6 		blr	x1
  1930 1a70 01008012 		mov	w1, -1
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 35
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 35
 
 
  1931 1a74 FB7344A9 		ldp	x27, x28, [sp, 64]
@@ -9095,7 +9151,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  1985 1b20 0000398B 		add	x0, x0, x25, uxtb
  1986 1b24 00044039 		ldrb	w0, [x0, 1]
  1987 1b28 00040012 		and	w0, w0, 3
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 36
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 36
 
 
  1988 1b2c 1F080071 		cmp	w0, 2
@@ -9155,7 +9211,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2042 1bdc F50313AA 		mov	x21, x19
  2043 1be0 15F7FFB5 		cbnz	x21, .L372
  2044 1be4 E3FFFF17 		b	.L380
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 37
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 37
 
 
  2045              		.p2align 2
@@ -9215,7 +9271,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2099 1c90 E1FFA172 		movk	w1, 0xfff, lsl 16
  2100 1c94 00040051 		sub	w0, w0, #1
  2101 1c98 1F00016B 		cmp	w0, w1
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 38
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 38
 
 
  2102 1c9c 68360054 		bhi	.L461
@@ -9275,7 +9331,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2156 1d6c 801B4039 		ldrb	w0, [x28, 6]
  2157 1d70 01781A12 		and	w1, w0, -33
  2158 1d74 61280034 		cbz	w1, .L546
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 39
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 39
 
 
  2159 1d78 401B0039 		strb	w0, [x26, 6]
@@ -9335,7 +9391,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2213 1e34 FB7344A9 		ldp	x27, x28, [sp, 64]
  2214 1e38 FE2B40F9 		ldr	x30, [sp, 80]
  2215 1e3c F353C9A8 		ldp	x19, x20, [sp], 144
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 40
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 40
 
 
  2216 1e40 C0035FD6 		ret
@@ -9395,7 +9451,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2270 1ef4 025C40B9 		ldr	w2, [x0, 92]
  2271              	.L459:
  2272 1ef8 9C070011 		add	w28, w28, 1
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 41
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 41
 
 
  2273 1efc 7C0B00B9 		str	w28, [x27, 8]
@@ -9455,7 +9511,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2327              	.L540:
  2328 1fcc F50313AA 		mov	x21, x19
  2329 1fd0 96070091 		add	x22, x28, 1
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 42
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 42
 
 
  2330 1fd4 18008052 		mov	w24, 0
@@ -9515,7 +9571,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2384 20a4 424B2038 		strb	w2, [x26, w0, uxtw]
  2385 20a8 00060054 		beq	.L433
  2386 20ac A0208052 		mov	w0, 261
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 43
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 43
 
 
  2387 20b0 0000194B 		sub	w0, w0, w25
@@ -9575,7 +9631,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2441 217c 01070011 		add	w1, w24, 1
  2442 2180 D60A0091 		add	x22, x22, 2
  2443 2184 381C0012 		and	w24, w1, 255
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 44
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 44
 
 
  2444 2188 1F170071 		cmp	w24, 5
@@ -9635,7 +9691,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2498 2244 D8FEFF17 		b	.L435
  2499              	.L544:
  2500 2248 40130091 		add	x0, x26, 4
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 45
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 45
 
 
  2501 224c 0A0180D2 		mov	x10, 8
@@ -9695,7 +9751,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2555 2308 21000091 		add	x1, x1, :lo12:.LANCHOR0
  2556 230c 38200091 		add	x24, x1, 8
  2557 2310 02008052 		mov	w2, 0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 46
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 46
 
 
  2558 2314 61430091 		add	x1, x27, 16
@@ -9755,7 +9811,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2612              		.global	sdFindFirstFile
  2613              		.type	sdFindFirstFile, %function
  2614              	sdFindFirstFile:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 47
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 47
 
 
  2615 23d0 F353A7A9 		stp	x19, x20, [sp, -400]!
@@ -9815,7 +9871,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2669 2488 441B4B29 		ldp	w4, w6, [x26, 88]
  2670 248c E13B00F9 		str	x1, [sp, 112]
  2671 2490 43030291 		add	x3, x26, 128
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 48
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 48
 
 
  2672 2494 454340B9 		ldr	w5, [x26, 64]
@@ -9875,7 +9931,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2726 2564 3554009B 		madd	x21, x1, x0, x21
  2727 2568 810B8052 		mov	w1, 92
  2728 256c E00314AA 		mov	x0, x20
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 49
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 49
 
 
  2729 2570 00000094 		bl	strchr
@@ -9935,7 +9991,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2783 2644 BBF6FF97 		bl	sdWaitForInterrupt
  2784 2648 C0040035 		cbnz	w0, .L611
  2785 264c 000340B9 		ldr	w0, [x24, #:lo12:RPi_IO_Base_Addr]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 50
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 50
 
 
  2786 2650 E10317AA 		mov	x1, x23
@@ -9995,7 +10051,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2840 2708 00000091 		add	x0, x0, :lo12:.LC8
  2841 270c 20003FD6 		blr	x1
  2842 2710 00008052 		mov	w0, 0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 51
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 51
 
 
  2843 2714 F55B41A9 		ldp	x21, x22, [sp, 16]
@@ -10055,7 +10111,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2895              		.type	sdFindNextFile, %function
  2896              	sdFindNextFile:
  2897 27c0 F353BCA9 		stp	x19, x20, [sp, -64]!
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 52
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 52
 
 
  2898 27c4 02040051 		sub	w2, w0, #1
@@ -10115,7 +10171,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  2952              		.global	sdFindClose
  2953              		.type	sdFindClose, %function
  2954              	sdFindClose:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 53
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 53
 
 
  2955 2880 00040051 		sub	w0, w0, #1
@@ -10175,7 +10231,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3008 292c 9416949A 		cinc	x20, x20, eq
  3009 2930 60170034 		cbz	w0, .L677
  3010 2934 002343B9 		ldr	w0, [x24, 800]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 54
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 54
 
 
  3011 2938 A0170034 		cbz	w0, .L653
@@ -10235,7 +10291,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3065 2a08 63001032 		orr	w3, w3, 65536
  3066 2a0c 430000B9 		str	w3, [x2]
  3067 2a10 430040B9 		ldr	w3, [x2]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 55
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 55
 
 
  3068 2a14 83240033 		bfi	w3, w4, 0, 10
@@ -10295,7 +10351,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3122 2ae4 1450041B 		madd	w20, w0, w4, w20
  3123 2ae8 D40600B9 		str	w20, [x22, 4]
  3124 2aec 23060034 		cbz	w3, .L689
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 56
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 56
 
 
  3125 2af0 44F5FF97 		bl	sdWaitForData
@@ -10355,7 +10411,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3179 2bb4 F76342A9 		ldp	x23, x24, [sp, 32]
  3180 2bb8 F96B43A9 		ldp	x25, x26, [sp, 48]
  3181 2bbc FB7344A9 		ldp	x27, x28, [sp, 64]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 57
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 57
 
 
  3182              	.L641:
@@ -10415,7 +10471,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3236 2c60 07684039 		ldrb	w7, [x0, 26]
  3237 2c64 267C069B 		mul	x6, x1, x6
  3238 2c68 056C4039 		ldrb	w5, [x0, 27]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 58
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 58
 
 
  3239 2c6c E10317AA 		mov	x1, x23
@@ -10475,7 +10531,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3293 2d2c 24080034 		cbz	w4, .L696
  3294 2d30 F55B01A9 		stp	x21, x22, [sp, 16]
  3295 2d34 F50301AA 		mov	x21, x1
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 59
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 59
 
 
  3296 2d38 010280D2 		mov	x1, 16
@@ -10535,7 +10591,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3350 2dfc E13F40F9 		ldr	x1, [sp, 120]
  3351 2e00 20008052 		mov	w0, 1
  3352 2e04 211100B4 		cbz	x1, .L746
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 60
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 60
 
 
  3353              	.L757:
@@ -10595,7 +10651,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3407 2ebc 1F0C0071 		cmp	w0, 3
  3408 2ec0 20581753 		lsl	w0, w1, 9
  3409 2ec4 430040B9 		ldr	w3, [x2]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 61
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 61
 
 
  3410 2ec8 0100811A 		csel	w1, w0, w1, eq
@@ -10655,7 +10711,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3464 2f8c 63001032 		orr	w3, w3, 65536
  3465 2f90 E03740F9 		ldr	x0, [sp, 104]
  3466 2f94 430000B9 		str	w3, [x2]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 62
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 62
 
 
  3467 2f98 430040B9 		ldr	w3, [x2]
@@ -10715,7 +10771,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3521 3044 1F1C0071 		cmp	w0, 7
  3522 3048 48010054 		bhi	.L765
  3523 304c E103002A 		uxtw	x1, w0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 63
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 63
 
 
  3524 3050 02000090 		adrp	x2, intFileIORecord
@@ -10775,7 +10831,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3576 3100 437C019B 		mul	x3, x2, x1
  3577 3104 0203038B 		add	x2, x24, x3
  3578 3108 441443B9 		ldr	w4, [x2, 788]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 64
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 64
 
 
  3579 310c 9F00136B 		cmp	w4, w19
@@ -10835,7 +10891,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3633              	.L778:
  3634 31e0 410040B9 		ldr	w1, [x2]
  3635 31e4 014400B8 		str	w1, [x0], 4
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 65
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 65
 
 
  3636 31e8 1F0016EB 		cmp	x0, x22
@@ -10895,7 +10951,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3690              	.L783:
  3691 32b8 020040B9 		ldr	w2, [x0]
  3692 32bc 224400B8 		str	w2, [x1], 4
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 66
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 66
 
 
  3693 32c0 DF0201EB 		cmp	x22, x1
@@ -10955,7 +11011,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3747 336c 1C080051 		sub	w28, w0, #2
  3748 3370 455740B9 		ldr	w5, [x26, 84]
  3749 3374 415F40B9 		ldr	w1, [x26, 92]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 67
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 67
 
 
  3750 3378 423B40B9 		ldr	w2, [x26, 56]
@@ -11015,7 +11071,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3804 3440 20003FD6 		blr	x1
  3805 3444 00008012 		mov	w0, -1
  3806 3448 F55B41A9 		ldp	x21, x22, [sp, 16]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 68
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 68
 
 
  3807 344c F76342A9 		ldp	x23, x24, [sp, 32]
@@ -11075,7 +11131,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3858              		.global	sdInitCard
  3859              		.type	sdInitCard, %function
  3860              	sdInitCard:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 69
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 69
 
 
  3861 34e0 FF0303D1 		sub	sp, sp, #192
@@ -11135,7 +11191,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3915 35a4 C14640B9 		ldr	w1, [x22, 68]
  3916              	.L858:
  3917 35a8 80C20091 		add	x0, x20, 48
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 70
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 70
 
 
  3918 35ac 31F4FF97 		bl	sdSendCommandP
@@ -11195,7 +11251,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  3972 3674 F303002A 		mov	w19, w0
  3973 3678 40160035 		cbnz	w0, .L924
  3974 367c C14640B9 		ldr	w1, [x22, 68]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 71
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 71
 
 
  3975 3680 61000034 		cbz	w1, .L866
@@ -11255,7 +11311,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  4029 3748 0A40012A 		orr	w10, w0, w1, lsl 16
  4030 374c C5224039 		ldrb	w5, [x22, 8]
  4031 3750 00000090 		adrp	x0, .LC16
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 72
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 72
 
 
  4032 3754 00000091 		add	x0, x0, :lo12:.LC16
@@ -11315,7 +11371,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  4086 381c F303002A 		mov	w19, w0
  4087 3820 80E7FF35 		cbnz	w0, .L849
  4088              	.L856:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 73
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 73
 
 
  4089 3824 E0231132 		mov	w0, 16744448
@@ -11375,7 +11431,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  4143 38e4 F96B48A9 		ldp	x25, x26, [sp, 128]
  4144 38e8 0AFFFF17 		b	.L849
  4145              	.L933:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 74
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 74
 
 
  4146 38ec B93E40B9 		ldr	w25, [x21, 60]
@@ -11435,7 +11491,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  4200 39a8 FB7349A9 		ldp	x27, x28, [sp, 144]
  4201 39ac CDFFFF17 		b	.L878
  4202              	.L928:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 75
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 75
 
 
  4203 39b0 FB7349A9 		ldp	x27, x28, [sp, 144]
@@ -11495,7 +11551,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  4249 0013 00       		.byte	0
  4250 0014 00       		.byte	0
  4251 0015 00       		.zero	1
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 76
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 76
 
 
  4252 0016 0000     		.hword	0
@@ -11555,7 +11611,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  4293      5F49465F 
  4293      434F4E44 
  4293      00
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 77
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 77
 
 
  4294 009d 000000   		.zero	3
@@ -11615,7 +11671,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  4335 0118 0000     		.zero	2
  4336 011a 02       		.byte	2
  4337 011b 0D       		.byte	13
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 78
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 78
 
 
  4338 011c 01       		.byte	1
@@ -11675,7 +11731,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  4380 0194 00       		.byte	0
  4381 0195 00       		.zero	1
  4382 0196 0000     		.hword	0
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 79
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 79
 
 
  4383 0198 53504545 		.string	"SPEED_CLASS"
@@ -11735,7 +11791,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  4424      57524954 
  4424      455F5052 
  4424      00
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 80
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 80
 
 
  4425 021d 000000   		.zero	3
@@ -11795,7 +11851,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  4465      0000
  4466 0298 0000     		.zero	2
  4467 029a 03       		.byte	3
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 81
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 81
 
 
  4468 029b 26       		.byte	38
@@ -11855,7 +11911,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  4511 0316 0000     		.hword	0
  4512 0318 53445F53 		.string	"SD_STATUS"
  4512      54415455 
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 82
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 82
 
 
  4512      5300
@@ -11915,7 +11971,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  4552      00
  4553 0399 00000000 		.zero	7
  4553      000000
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 83
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 83
 
 
  4554 03a0 10       		.byte	16
@@ -11975,7 +12031,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  4587 0067 00       		.zero	1
  4588              	.LC2:
  4589 0068 454D4D43 		.string	"EMMC: Error waiting for interrupt: %08x %08x %08x\n"
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 84
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 84
 
 
  4589      3A204572 
@@ -12035,7 +12091,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  4609      74207761 
  4609      6974696E 
  4610 01ed 000000   		.zero	3
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 85
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 85
 
 
  4611              	.LC10:
@@ -12095,7 +12151,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  4634              	.LC18:
  4635 0370 4D4D4300 		.string	"MMC"
  4636 0374 00000000 		.zero	4
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 86
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 86
 
 
  4637              	.LC19:
@@ -12113,46 +12169,46 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  4644      20322048 
  4644      4300
  4645              		.ident	"GCC: (GNU Toolchain for the A-profile Architecture 8.2-2019.01 (arm-rel-8.28)) 8.2.1 20180
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 87
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 87
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 SDCard.c
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4      .text:0000000000000000 $x
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:7      .text:0000000000000000 sdWaitForData
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:96     .text:0000000000000130 sdWaitForInterrupt
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:220    .text:00000000000002e0 sdSetClock
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:395    .text:0000000000000530 SetFindDataFromFATEntry.part.0
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:479    .text:0000000000000670 sdSendCommandP
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:824    .text:0000000000000b60 sdAppSendOpCond
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:968    .text:0000000000000d30 sdResetCard
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1086   .text:0000000000000ed0 sdTransferBlocks.constprop.7
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1250   .text:0000000000001110 LoadDrivePartition
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1416   .text:0000000000001360 sdTransferBlocks
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1668   .text:00000000000016d0 sdClearBlocks
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1781   .text:0000000000001850 getSetNextCluster
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:1948   .text:0000000000001aa0 WildcardMatch
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2081   .text:0000000000001c50 LocateFATEntry
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2614   .text:00000000000023d0 sdFindFirstFile
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2896   .text:00000000000027c0 sdFindNextFile
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2954   .text:0000000000002880 sdFindClose
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:2982   .text:00000000000028d0 sdCreateFile
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4578   .bss:0000000000000cc0 intFileIORecord
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:3281   .text:0000000000002d00 sdReadFile
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:3519   .text:0000000000003040 sdCloseHandle
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:3546   .text:0000000000003090 sdSetFilePointer
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:3836   .text:00000000000034a0 sdGetFileSize
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:3860   .text:00000000000034e0 sdInitCard
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4218   .text:00000000000039d0 sdCardCSD
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4566   .bss:0000000000000000 LOG_ERROR
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4229   .rodata:0000000000000000 $d
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4233   .rodata:0000000000000000 SD_TYPE_NAME
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4240   .data:0000000000000000 $d
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4244   .data:0000000000000000 sdCommandTable
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4562   .bss:0000000000000000 $d
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4570   .bss:0000000000000008 sdCard
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4574   .bss:0000000000000080 intSearchRecord
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4581   .rodata.str1.8:0000000000000000 $d
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4      .text:0000000000000000 $x
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:7      .text:0000000000000000 sdWaitForData
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:96     .text:0000000000000130 sdWaitForInterrupt
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:220    .text:00000000000002e0 sdSetClock
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:395    .text:0000000000000530 SetFindDataFromFATEntry.part.0
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:479    .text:0000000000000670 sdSendCommandP
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:824    .text:0000000000000b60 sdAppSendOpCond
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:968    .text:0000000000000d30 sdResetCard
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1086   .text:0000000000000ed0 sdTransferBlocks.constprop.7
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1250   .text:0000000000001110 LoadDrivePartition
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1416   .text:0000000000001360 sdTransferBlocks
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1668   .text:00000000000016d0 sdClearBlocks
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1781   .text:0000000000001850 getSetNextCluster
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:1948   .text:0000000000001aa0 WildcardMatch
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2081   .text:0000000000001c50 LocateFATEntry
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2614   .text:00000000000023d0 sdFindFirstFile
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2896   .text:00000000000027c0 sdFindNextFile
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2954   .text:0000000000002880 sdFindClose
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:2982   .text:00000000000028d0 sdCreateFile
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4578   .bss:0000000000000cc0 intFileIORecord
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:3281   .text:0000000000002d00 sdReadFile
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:3519   .text:0000000000003040 sdCloseHandle
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:3546   .text:0000000000003090 sdSetFilePointer
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:3836   .text:00000000000034a0 sdGetFileSize
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:3860   .text:00000000000034e0 sdInitCard
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4218   .text:00000000000039d0 sdCardCSD
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4566   .bss:0000000000000000 LOG_ERROR
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4229   .rodata:0000000000000000 $d
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4233   .rodata:0000000000000000 SD_TYPE_NAME
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4240   .data:0000000000000000 $d
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4244   .data:0000000000000000 sdCommandTable
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4562   .bss:0000000000000000 $d
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4570   .bss:0000000000000008 sdCard
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4574   .bss:0000000000000080 intSearchRecord
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4581   .rodata.str1.8:0000000000000000 $d
 
 UNDEFINED SYMBOLS
 RPi_IO_Base_Addr
@@ -12162,7 +12218,7 @@ timer_wait
 __locale_ctype_ptr
 wctob
 strchr
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 1
 
 
    1              		.arch armv8-a
@@ -12222,7 +12278,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
   52 0090 F100C0F2 		movk	x17, 0x7, lsl 32
   53 0094 412C09A9 		stp	x1, x11, [x2, 144]
   54 0098 0B001091 		add	x11, x0, 1024
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 2
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 2
 
 
   55 009c 4301C0D2 		mov	x3, 42949672960
@@ -12282,7 +12338,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  109 0174 0CA02891 		add	x12, x0, 2600
  110 0178 108403F9 		str	x16, [x0, 1800]
  111 017c F0777EB2 		mov	x16, 4294967292
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 3
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 3
 
 
  112 0180 5001C0F2 		movk	x16, 0xa, lsl 32
@@ -12342,7 +12398,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  166 0258 1F4C04F9 		str	xzr, [x0, 2200]
  167 025c 015004F9 		str	x1, [x0, 2208]
  168 0260 105404F9 		str	x16, [x0, 2216]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 4
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 4
 
 
  169 0264 0F5804F9 		str	x15, [x0, 2224]
@@ -12402,7 +12458,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  223 033c 710E09A9 		stp	x17, x3, [x19, 144]
  224 0340 6E4A0AA9 		stp	x14, x18, [x19, 160]
  225 0344 8F420BA9 		stp	x15, x16, [x20, 176]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 5
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 5
 
 
  226 0348 8A2A0CA9 		stp	x10, x10, [x20, 192]
@@ -12462,7 +12518,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  260      00000000 
  261 05ac 00000000 		.zero	4
  262              		.type	H, %object
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 6
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 6
 
 
  263              		.size	H, 100
@@ -12522,7 +12578,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  293              		.size	P, 100
  294              	P:
  295 0820 00000000 		.zero	100
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 7
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 7
 
 
  295      00000000 
@@ -12582,42 +12638,42 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  325      00000000 
  325      00000000 
  325      00000000 
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 8
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 8
 
 
  325      00000000 
  326              		.ident	"GCC: (GNU Toolchain for the A-profile Architecture 8.2-2019.01 (arm-rel-8.28)) 8.2.1 20180
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 9
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 9
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 fonts.c
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4      .text:0000000000000000 $x
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:8      .text:0000000000000000 fonts_is_implemented
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:19     .text:0000000000000020 fonts_char_to_font
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:31     .text:0000000000000040 fonts_init
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:236    .bss:0000000000000000 $d
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:240    .bss:0000000000000000 char_is_implemented
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:245    .bss:0000000000000080 char_font_map
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:249    .bss:0000000000000478 A
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:254    .bss:00000000000004e0 C
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:259    .bss:0000000000000548 E
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:264    .bss:00000000000005b0 H
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:269    .bss:0000000000000618 I
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:274    .bss:0000000000000680 L
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:279    .bss:00000000000006e8 M
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:284    .bss:0000000000000750 N
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:289    .bss:00000000000007b8 O
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:294    .bss:0000000000000820 P
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:299    .bss:0000000000000888 R
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:304    .bss:00000000000008f0 S
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:309    .bss:0000000000000958 T
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:314    .bss:00000000000009c0 W
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:319    .bss:0000000000000a28 Z
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:324    .bss:0000000000000a90 DOLLAR_SIGN
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4      .text:0000000000000000 $x
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:8      .text:0000000000000000 fonts_is_implemented
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:19     .text:0000000000000020 fonts_char_to_font
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:31     .text:0000000000000040 fonts_init
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:236    .bss:0000000000000000 $d
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:240    .bss:0000000000000000 char_is_implemented
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:245    .bss:0000000000000080 char_font_map
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:249    .bss:0000000000000478 A
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:254    .bss:00000000000004e0 C
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:259    .bss:0000000000000548 E
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:264    .bss:00000000000005b0 H
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:269    .bss:0000000000000618 I
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:274    .bss:0000000000000680 L
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:279    .bss:00000000000006e8 M
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:284    .bss:0000000000000750 N
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:289    .bss:00000000000007b8 O
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:294    .bss:0000000000000820 P
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:299    .bss:0000000000000888 R
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:304    .bss:00000000000008f0 S
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:309    .bss:0000000000000958 T
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:314    .bss:00000000000009c0 W
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:319    .bss:0000000000000a28 Z
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:324    .bss:0000000000000a90 DOLLAR_SIGN
 
 NO UNDEFINED SYMBOLS
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 1
 
 
    1              		.arch armv8-a
@@ -12677,7 +12733,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
   52              	.L11:
   53 0090 1A000090 		adrp	x26, printf
   54 0094 5A030091 		add	x26, x26, :lo12:printf
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 2
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 2
 
 
   55 0098 F803174B 		neg	w24, w23
@@ -12737,7 +12793,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  109 0138 9F370071 		cmp	w28, 13
  110 013c E0110054 		beq	.L51
  111 0140 F303012A 		mov	w19, w1
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 3
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 3
 
 
  112 0144 F96B03A9 		stp	x25, x26, [sp, 48]
@@ -12797,7 +12853,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  166 020c 665E061B 		madd	w6, w19, w6, w23
  167 0210 BF020071 		cmp	w21, 0
  168 0214 A57C131B 		mul	w5, w5, w19
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 4
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 4
 
 
  169 0218 55B0951A 		csel	w21, w2, w21, lt
@@ -12857,7 +12913,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  223              	.L34:
  224 02d8 600140B9 		ldr	w0, [x11]
  225 02dc 4A050011 		add	w10, w10, 1
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 5
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 5
 
 
  226 02e0 E7400091 		add	x7, x7, 16
@@ -12917,7 +12973,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  280              	.L50:
  281 0394 02000090 		adrp	x2, .LANCHOR0
  282 0398 530040B9 		ldr	w19, [x2, #:lo12:.LANCHOR0]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 6
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 6
 
 
  283 039c 20619952 		mov	w0, 51977
@@ -12977,7 +13033,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  337 0448 E0430291 		add	x0, sp, 144
  338 044c E1630291 		add	x1, sp, 152
  339 0450 18070011 		add	w24, w24, 1
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 7
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 7
 
 
  340 0454 73420091 		add	x19, x19, 16
@@ -13037,7 +13093,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  394 0524 23A7995A 		csneg	w3, w25, w25, ge
  395 0528 BF02166B 		cmp	w21, w22
  396 052c 2C060054 		bgt	.L64
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 8
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 8
 
 
  397 0530 F303164B 		neg	w19, w22
@@ -13097,7 +13153,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  451 05ec C0035FD6 		ret
  452              		.p2align 2
  453              	.L64:
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 9
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 9
 
 
  454 05f0 B37E550B 		add	w19, w21, w21, lsr 31
@@ -13157,7 +13213,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  506              	.L91:
  507 06a0 830240B9 		ldr	w3, [x20]
  508 06a4 0201261E 		fmov	w2, s8
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 10
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 10
 
 
  509 06a8 E0830291 		add	x0, sp, 160
@@ -13217,7 +13273,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  563 0774 7C1E011B 		madd	w28, w19, w1, w7
  564 0778 3F030071 		cmp	w25, 0
  565 077c 19B0991A 		csel	w25, w0, w25, lt
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 11
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 11
 
 
  566 0780 7F031C6B 		cmp	w27, w28
@@ -13277,7 +13333,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  620              	.L87:
  621 083c 231A8052 		mov	w3, 209
  622 0840 A301BA72 		movk	w3, 0xd00d, lsl 16
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 12
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 12
 
 
  623 0844 E00640B9 		ldr	w0, [x23, 4]
@@ -13337,7 +13393,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  676 08ec 00000090 		adrp	x0, printf
  677 08f0 00000091 		add	x0, x0, :lo12:printf
  678 08f4 64044029 		ldp	w4, w1, [x3]
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 13
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 13
 
 
  679 08f8 2110051B 		madd	w1, w1, w5, w4
@@ -13397,7 +13453,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  729 0994 42FE8052 		mov	w2, 2034
  730 0998 021400B9 		str	w2, [x0, 20]
  731 099c 20608052 		mov	w0, 769
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 14
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 14
 
 
  732 09a0 200000B9 		str	w0, [x1]
@@ -13457,7 +13513,7 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  783              		.type	hal_io_serial_getc, %function
  784              	hal_io_serial_getc:
  785 0a20 010382D2 		mov	x1, 4120
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 15
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 15
 
 
  786 0a24 01E4A7F2 		movk	x1, 0x3f20, lsl 16
@@ -13491,28 +13547,28 @@ AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 1
  814              	curr_x:
  815 0004 0A000000 		.word	10
  816              		.ident	"GCC: (GNU Toolchain for the A-profile Architecture 8.2-2019.01 (arm-rel-8.28)) 8.2.1 20180
-AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s 			page 16
+AARCH64 GAS  C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s 			page 16
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 hal_io.c
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:4      .text:0000000000000000 $x
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:8      .text:0000000000000000 hal_io_init
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:15     .text:0000000000000010 hal_io_video_init
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:23     .text:0000000000000020 hal_io_video_line
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:102    .text:0000000000000120 hal_io_video_putc
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:301    .text:00000000000003d0 hal_io_video_putc_x_y
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:466    .text:0000000000000610 hal_io_video_puts
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:672    .text:00000000000008e0 hal_io_video_put_pixel
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:687    .text:0000000000000910 hal_io_serial_init
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:698    .text:0000000000000930 __delay_881
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:708    .text:0000000000000948 __delay_886
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:739    .text:00000000000009b0 hal_io_serial_puts
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:765    .text:00000000000009f0 hal_io_serial_putc
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:784    .text:0000000000000a20 hal_io_serial_getc
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:810    .data:0000000000000000 curr_y
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:814    .data:0000000000000004 curr_x
-C:\Users\nseltzer\AppData\Local\Temp\ccfHPjNf.s:806    .data:0000000000000000 $d
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:4      .text:0000000000000000 $x
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:8      .text:0000000000000000 hal_io_init
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:15     .text:0000000000000010 hal_io_video_init
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:23     .text:0000000000000020 hal_io_video_line
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:102    .text:0000000000000120 hal_io_video_putc
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:301    .text:00000000000003d0 hal_io_video_putc_x_y
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:466    .text:0000000000000610 hal_io_video_puts
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:672    .text:00000000000008e0 hal_io_video_put_pixel
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:687    .text:0000000000000910 hal_io_serial_init
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:698    .text:0000000000000930 __delay_881
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:708    .text:0000000000000948 __delay_886
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:739    .text:00000000000009b0 hal_io_serial_puts
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:765    .text:00000000000009f0 hal_io_serial_putc
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:784    .text:0000000000000a20 hal_io_serial_getc
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:810    .data:0000000000000000 curr_y
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:814    .data:0000000000000004 curr_x
+C:\Users\nseltzer\AppData\Local\Temp\ccorUOUd.s:806    .data:0000000000000000 $d
 
 UNDEFINED SYMBOLS
 fonts_init
