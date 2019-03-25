@@ -79,8 +79,8 @@ int main (void) {
 	printf("\n");
   
 	/* Display root directory */
-	printf("Directory (/): \n");
-	DisplayDirectory("\\*.*");
+	// printf("Directory (/): \n");
+	// DisplayDirectory("\\*.*");
 
 
 	hal_io_video_init();
