@@ -180,11 +180,11 @@ int ProcessCommand(char word [], uint8_t len) {
 		printf("\nworking directory: %s\n", working_directory);
 
 	} else if (strcmp(command, "dump") == 0) {
-		char * argument = strtok(NULL, " ");
-		if (argument == NULL) {
-			printf ("Please enter the name of a binary file");
+		//char * argument = strtok(NULL, " ");
+		if (command_arg == NULL) {
+			printf ("\nPlease enter the name of a binary file");
 		} else {
-			GetBinary(argument);
+			GetBinary(command_arg);
 		}
 	} else {
 		printf("\n%s", "Command not recognized");
