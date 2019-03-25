@@ -36,6 +36,8 @@ char * GetCurrentDirectory(char subdir []);
 void GetBinary(const char * fileName);
 void executeSimpleApp(const char * fileName);
 void returnCharToExecutable(const char c);
+void processCommandLoop(void);
+
 
 int handleInterrupt(void){
 	
@@ -58,40 +60,7 @@ int handleInterrupt(void){
 			break;
 	}
 	
-	//asm volatile ("mov %[arg2], x0\n" : [arg2] "=r" (arg2));
-	// asm volatile ("mov %[arg2], x1\n" : [arg2] "=r" (arg2)); 
-	// printf("%c", arg2);
-	// // printf("\n");
-	// // printf("%s", *arg2);
-	//asm volatile ("eret");
-	//return arg1;
 }
-
-void letsTryForScience(char a) {
-	//asm volatile ("mov %[arg1], x0\n" : [arg1] "=r" (arg1)); 
-	asm volatile ("mov x0, 'c'");
-	asm volatile ("svc #0x0A");
-}
-
-// __attribute__((naked)) void svc_handler(void);
-// __attribute__((naked)) void svc_handler(void) {
-// 	// printf("Please Clap\n");
-// 	// return 0;
-// 	uint32_t arg0, arg1, arg2, arg3, ret_address;
-// 	asm volatile ( "mov %[arg0], r0 \n"
-// 												"mov %[arg1], r1 \n"
-// 												"mov %[arg2], r2 \n"
-// 												"mov %[arg3], r3 \n"
-// 												"mov %[ret_address], r14 \n"
-// 												: [arg0] "=r" (arg0), // output
-// 													[arg1] "=r" (arg1),
-// 													[arg2] "=r" (arg2),
-// 													[arg3] "=r" (arg3),
-// 													[ret_address] "=r" (ret_address)
-// 												: // no input
-// 												: // Clobber list
-// 	);
-// }
 
 
 int main (void) {
@@ -104,36 +73,12 @@ int main (void) {
 	/* Display the SD CARD directory */
 	sdInitCard (&printf, &printf, true);
 
-	//letsTryForScience('c');
-	//asm volatile ("svc #0x0A");
-
 	printf("\n");
-	DisplayDirectory("\\*.*");
+	
 	/* Display root directory */
-	/*printf("Directory (/): \n");
+	printf("Directory (/): \n");
 	DisplayDirectory("\\*.*");
 
-	printf("\n");
-  printf("Opening Alice.txt \n");
-  */
-
-	/*
-	HANDLE fHandle = sdCreateFile("Alice.txt", GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (fHandle != 0) {
-		uint32_t bytesRead;
-
-		if ((sdReadFile(fHandle, &bcommand_uffer[0], 500, &bytesRead, 0) == true))  {
-				bcommand_uffer[bytesRead-1] = '\0';  ///insert null char
-				printf("File Contents: %s", &bcommand_uffer[0]);
-		}
-		else{
-			printf("Failed to read" );
-		}
-
-		// Close the file
-		sdCloseHandle(fHandle);
-
-	}*/
 
 	hal_io_video_init();
 
@@ -142,13 +87,25 @@ int main (void) {
 	//Typewriter
 	hal_io_serial_init();
 	hal_io_serial_puts( SerialA, "Typewriter:" );
+	
 	printf("#");
+
+	processCommandLoop();
+	/* display bitmap on screen */
+	//DisplayBitmap(743, 624, "./MINIOS.BMP");   //<<<<-- Doesn't seem to work
+
+	while (1){
+		set_Activity_LED(1);			// Turn LED on
+		timer_wait(500000);				// 0.5 sec delay
+		set_Activity_LED(0);			// Turn Led off
+		timer_wait(500000);				// 0.5 sec delay
+    }
+	return(0);
+}
+
+void processCommandLoop(void) {
 	uint8_t c;
 	uint8_t command_buffer_index = 0;
-
-	//printf("%s\n", "Attempting to dump Sensors.bin");
-	//GetBinary("app.bin");
-	//executeSimpleApp("app.bin");
 	while(command_buffer_index < 75){
 		c = hal_io_serial_getc( SerialA );
 		hal_io_serial_putc( SerialA, c );
@@ -174,16 +131,6 @@ int main (void) {
 			command_buffer[command_buffer_index++] = c;
 		}
 	}
-	/* display bitmap on screen */
-	//DisplayBitmap(743, 624, "./MINIOS.BMP");   //<<<<-- Doesn't seem to work
-
-	while (1){
-		set_Activity_LED(1);			// Turn LED on
-		timer_wait(500000);				// 0.5 sec delay
-		set_Activity_LED(0);			// Turn Led off
-		timer_wait(500000);				// 0.5 sec delay
-    }
-	return(0);
 }
 
 
@@ -229,7 +176,7 @@ typedef int (*printhandler) (const char *fmt, ...);
 void executeSimpleApp(const char * fileName) {
 	
 	HANDLE fHandle = sdCreateFile(fileName, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	printf("\nExecuting %s\n", fileName);
+	//printf("\nExecuting %s\n", fileName);
 	if (fHandle != 0) {
 		uint32_t bytesRead;
 		uint32_t useless;
@@ -244,15 +191,6 @@ void executeSimpleApp(const char * fileName) {
 
 				int pls = execution();
 				printf("process executed with status code %d", pls);
-				
-				// uint32_t useless;
-				// int fileSize = sdGetFileSize(fHandle, &useless);
-				// printf("size of file: %d", fileSize);
-				// for(size_t i = 0; i < bytesRead; i += 2)
-				// {
-
-				// 	printf("%x", (unsigned char) buffer[i]);
-				// }
 				
 		}
 		else{
@@ -292,32 +230,6 @@ void GetBinary(const char * fileName) {
 					col = 0;
 				}
 			}
-			
-			
-				//buffer[bytesRead-1] = '\0';  ///insert null char
-				//printf("File Contents: %s", &buffer[0]);
-				// printf("%x\n", buffer[0] & 0xff);
-				// printf("%x\n", buffer[1] & 0xff);
-				// printf("%x\n", buffer[2] & 0xff);
-				// printf("%x\n", buffer[3] & 0xff);
-				// printf("%x\n", buffer[4] & 0xff);
-				// printf("%x\n", buffer[5] & 0xff);
-				// printf("%x\n", buffer[6] & 0xff);
-
-				// int (*execution) (void) = &buffer;
-
-				// int pls = execution();
-				// printf("process executed with status code %d \n", pls);
-				
-				// uint32_t useless;
-				// int fileSize = sdGetFileSize(fHandle, &useless);
-				// printf("size of file: %d", fileSize);
-				// for(size_t i = 0; i < bytesRead; i += 2)
-				// {
-
-				// 	printf("%x", (unsigned char) buffer[i]);
-				// }
-				
 		}
 		else{
 			printf("Failed to read" );
@@ -352,8 +264,3 @@ void DisplayDirectory(const char* dirName) {
 	sdFindClose(fh);												// Close the serach handle
 }
 
-//TODO Loader
-
-int loader() {
-
-}
